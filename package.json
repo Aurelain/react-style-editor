@@ -52,5 +52,12 @@
             "@babel/plugin-proposal-class-properties"
         ]
     },
-    "browserslist": "ie 11"
+    "browserslist": "ie 11",
+    "bugs": {
+        "url": "https://github.com/Aurelain/react-style-editor/issues"
+    },
+    "directories": {
+        "lib": "lib",
+        "test": "tests"
+    }
 }
