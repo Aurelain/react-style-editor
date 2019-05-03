@@ -24,7 +24,6 @@
     "scripts": {
         "storybook": "start-storybook",
         "lib": "rm -rf lib && mkdir lib && babel src -d lib",
-        "clean": "rm -rf lib && mkdir lib",
         "collect-database": "node scripts/collect-database.js"
     },
     "dependencies": {},

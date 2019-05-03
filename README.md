@@ -1,7 +1,9 @@
 # React Style Editor
 
-[![Npm Version][npm-version-image]][npm-version-url]
-[![License][license-image]][license-url]
+[![Npm Version][npm-version-image]][npm-version-url]   [![License][license-image]][license-url]   
+[![Size][bundlephobia-image]][bundlephobia-url]
+
+
 
 A React component that displays and edits CSS, similar to the browser's DevTools.
 
@@ -64,5 +66,11 @@ class Component extends React.Component {
 - Filters (similar to the browser)
 - Error messages displayed in the warning-sign's tooltip
 
-## License
-[MIT](https://github.com/Aurelain/react-style-editor/blob/master/LICENSE)
+[npm-version-image]: https://img.shields.io/npm/v/react-style-editor.svg?style=flat-square
+[npm-version-url]: https://www.npmjs.com/package/react-style-editor
+
+[license-image]: http://img.shields.io/npm/l/react-style-editor.svg?style=flat-square
+[license-url]: https://github.com/Aurelain/react-style-editor/blob/master/LICENSE
+
+[bundlephobia-image]: https://img.shields.io/bundlephobia/minzip/react-style-editor.svg?style=flat-square
+[bundlephobia-url]: https://bundlephobia.com/result?p=react-style-editor
