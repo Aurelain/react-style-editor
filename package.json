@@ -1,0 +1,39 @@
+{
+    "name": "react-style-editor",
+    "version": "0.1.0",
+    "description": "A React component that displays and edits CSS, similar to the browser's DevTools.",
+    "main": "lib/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Aurelain/react-style-editor.git"
+    },
+    "author": "Aurelain <aurelain@gmail.com>",
+    "license": "MIT",
+    "homepage": "https://github.com/Aurelain/react-style-editor/",
+    "keywords": [
+        "react",
+        "style",
+        "editor",
+        "CSS",
+        "rules",
+        "declarations",
+        "comment",
+        "checkbox",
+        "validator"
+    ],
+    "scripts": {
+        "storybook": "start-storybook",
+        "collect-database": "node scripts/collect-database.js"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@babel/core": "^7.4.4",
+        "@storybook/react": "^5.0.11",
+        "babel-loader": "^8.0.5",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6"
+    },
+    "files": [
+        "lib"
+    ]
+}
