@@ -40,7 +40,7 @@ class Component extends React.Component {
     render() {
         return (
             <StyleEditor
-                css={`
+                defaultValue={`
                     div {color:red;}
                     /* Hello, World! */
                     @media screen {
@@ -60,10 +60,10 @@ class Component extends React.Component {
 
 |prop           |  type    | default     |description                                                 |
 |---------------|------------------------|----------------------------------------------------|--------|
-| `defaultValue`  | string   | `""`        | The initial CSS code
+| `defaultValue`  | string   | `''`        | The initial CSS code
 | `value`         | string   | `undefined` | The controlled CSS code
 | `onChange`      | function | `null`      | A closure that receives a single argument, `string` or `array`, depending on the value of `outputFormats`
-| `outputFormats` | string   | `"pretty"`  | Comma-separated values of: `"preserved"`, `"machine"`, `"pretty"`
+| `outputFormats` | string   | `'pretty'`  | Comma-separated values of: `'preserved'`, `'machine'`, `'pretty'`
 | `readOnly`      | boolean  | `false`     | All interactions with the component are blocked
 
 
