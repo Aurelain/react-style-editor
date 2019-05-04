@@ -21,6 +21,8 @@ const classes = stylize('StyleEditor', {
     root: {
         fontFamily: 'Consolas, Liberation Mono, Menlo, monospace', // GitHub
         fontSize: '12px', // Chrome
+        textAlign: 'left',
+        overflowY: 'auto',
         color: 'black',
         position: 'relative',
         cursor: 'default',
@@ -40,7 +42,9 @@ const classes = stylize('StyleEditor', {
         },
     },
     isEditing: {
-        pointerEvents: 'none',
+        '& *': {
+            pointerEvents: 'none',
+        }
     },
 });
 
@@ -72,8 +76,9 @@ class StyleEditor extends React.Component {
      *
      */
     render() {
-        const {css, ...other} = this.props;
+        const {css, className, ...other} = this.props;
         const {isEditing, hasArea} = this.state;
+        delete other.outputFormats; // not used in render
 
         if (css !== this.previousPropsCSS) { // our parent changed the css!
             this.currentRules = this.computeRules(css);
@@ -88,7 +93,12 @@ class StyleEditor extends React.Component {
                 onCopy={this.onCopy}
                 onClick={isEmpty ? this.onClick : null}
                 {...other}
-                className={cls(classes.root, isEmpty && !hasArea && classes.isEmpty, isEditing && classes.isEditing)}
+                className={cls(
+                    classes.root,
+                    isEmpty && !hasArea && classes.isEmpty,
+                    isEditing && classes.isEditing,
+                    className,
+                )}
             >
                 {
                     !isEmpty &&
@@ -114,6 +124,13 @@ class StyleEditor extends React.Component {
                 }
             </div>
         );
+    }
+
+    /**
+     *
+     */
+    componentDidMount() {
+        this.announceOnChange(this.currentRules);
     }
 
     /**
@@ -209,6 +226,8 @@ class StyleEditor extends React.Component {
                         node = createTemporaryDeclaration(text);
                     }
                     break;
+                default:
+                // nothing
             }
             const siblings = parentNode.kids;
             const index = siblings.findIndex(item => item.id === id);
@@ -238,8 +257,33 @@ class StyleEditor extends React.Component {
         const {onChange} = this.props;
         if (onChange) {
             const freshRules = this.computeRulesFromPayload(id, payload);
-            const prettyBlob = prettify(freshRules);
-            onChange(prettyBlob);
+            this.announceOnChange(freshRules);
+        }
+    };
+
+    /**
+     *
+     */
+    announceOnChange = (rules) => {
+        const {onChange, outputFormats} = this.props;
+        if (onChange) {
+            const formats = outputFormats.replace(/\s/g, '').split(',');
+            const output = [];
+            for (const format of formats) {
+                switch (format) {
+                    case 'preserved':
+                        output.push(stringify(rules));
+                        break;
+                    case 'pretty':
+                    default:
+                        output.push(prettify(rules));
+                        break;
+                    case 'machine':
+                        output.push(JSON.parse(JSON.stringify(rules))); // TODO: use something faster
+                        break;
+                }
+            }
+            onChange(output.length > 1 ? output : (output[0] || ''));
         }
     };
 
@@ -260,6 +304,7 @@ class StyleEditor extends React.Component {
         const freshBlob = desiredTick ? unignore(this.currentRules, id) : ignore(this.currentRules, id);
         this.currentRules = this.computeRules(freshBlob);
         this.forceUpdate();
+        this.announceOnChange(this.currentRules);
     };
 
     /**
@@ -345,4 +390,7 @@ const createTemporaryRule = (text) => {
 // =====================================================================================================================
 //  D E F I N I T I O N
 // =====================================================================================================================
+StyleEditor.defaultProps = {
+    outputFormats: 'pretty',
+};
 export default StyleEditor;

@@ -6,10 +6,10 @@ const PREFIX = 'rse';
 const SEPARATOR = '-';
 const dashConverter = match => '-' + match.toLowerCase();
 
-let isAppended = false;
 let registry = {};
 let cssCollection = [];
 let style = document.createElement('style');
+let count = 0;
 
 
 /**
@@ -63,10 +63,10 @@ const collect = (name, classes, accumulator = {}) => {
  *
  */
 const prepareStyling = () => {
-    if (!isAppended) {
+    count++;
+    if (count === 1) { // TODO: study impact on hot loading
         style.innerHTML = cssCollection.join('');
         document.head.appendChild(style);
-        isAppended = true;
     }
 };
 
@@ -74,10 +74,10 @@ const prepareStyling = () => {
  *
  */
 const releaseStyling = () => {
-    if (isAppended) {
+    count--;
+    if (count === 0) {
         document.head.removeChild(style);
         style.innerHTML = '';
-        isAppended = false;
     }
 };
 

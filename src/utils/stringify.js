@@ -46,6 +46,8 @@ const flatten = (kids, accumulator = []) => {
                     (item.hasSlashEnd? '*/' : '')
                 );
                 break;
+            default:
+            // nothing
         }
     }
     return accumulator;

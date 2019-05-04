@@ -44,10 +44,10 @@ class Comment extends React.PureComponent {
      *
      */
     render() {
-        const {id, content, onTick, onEditChange, onEditEnd} = this.props;
+        const {id, content, onTick} = this.props;
         const {isEditingContent, isEditingAfter} = this.state;
 
-        const isLegit = !!content.match(/^\s*[-a-zA-Z0-9_]*\s*:|[{}()*@;\/\]]/);
+        const isLegit = !!content.match(/^\s*[-a-zA-Z0-9_]*\s*:|[{}()*@;/\]]/);
 
         return (
             <div

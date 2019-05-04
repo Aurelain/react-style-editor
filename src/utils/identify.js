@@ -27,6 +27,8 @@ const identify = (list, usedIds = {}) => {
             case COMMENT:
                 id = '/*' + item.content + '*/';
                 break;
+            default:
+                // nothing
         }
         if (id in usedIds) {
             usedIds[id]++;

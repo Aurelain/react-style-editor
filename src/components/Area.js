@@ -19,7 +19,7 @@ const classes = stylize('Area', {
         outlineOffset: '1px',
         minWidth: 4,
         textDecoration: 'none', // to combat `isInvalid` from upstream
-        pointerEvents: 'auto', // to combat the general lock imposed by StyleEditor
+        pointerEvents: 'auto !important', // to combat the general lock imposed by StyleEditor
     },
 });
 

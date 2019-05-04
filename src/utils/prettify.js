@@ -44,6 +44,8 @@ const flatten = (kids, accumulator = [], indent = '') => {
             case COMMENT:
                 accumulator.push(indent + '/*' +item.content + '*/\r\n');
                 break;
+            default:
+            // nothing
         }
     }
     return accumulator;

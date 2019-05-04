@@ -1,7 +1,6 @@
 # React Style Editor
 
-[![Npm Version][npm-version-image]][npm-version-url]   [![License][license-image]][license-url]   
-[![Size][bundlephobia-image]][bundlephobia-url]
+[![Npm Version][npm-version-image]][npm-version-url]   [![Size][bundlephobia-image]][bundlephobia-url]
 
 
 
@@ -13,11 +12,12 @@ A React component that displays and edits CSS, similar to the browser's DevTools
 - Facilitates commenting the CSS code through checkbox toggling
 - Allows easy additions by clicking next to the desired location
 - Has no dependencies (other than React)
+- Is tiny (< 10 KB minified)
 - Is customizable through classes 
 - Offers 3 output formats:
     - the code with preserved formatting
-    - the prettified code
     - a machine-friendly model of the code (recursive array of objects)
+    - the prettified code
 
 ## Installation
 
@@ -51,6 +51,9 @@ class Component extends React.Component {
 }
 ```
 
+## API
+TODO
+
 ## Ideas for the future
 - Live demo
 - Color swatches (similar to the browser)
@@ -68,9 +71,6 @@ class Component extends React.Component {
 
 [npm-version-image]: https://img.shields.io/npm/v/react-style-editor.svg?style=flat-square
 [npm-version-url]: https://www.npmjs.com/package/react-style-editor
-
-[license-image]: http://img.shields.io/npm/l/react-style-editor.svg?style=flat-square
-[license-url]: https://github.com/Aurelain/react-style-editor/blob/master/LICENSE
 
 [bundlephobia-image]: https://img.shields.io/bundlephobia/minzip/react-style-editor.svg?style=flat-square
 [bundlephobia-url]: https://bundlephobia.com/result?p=react-style-editor
