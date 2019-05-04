@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/react-style-editor/static/js/main.4ba59391.chunk.js",
+    "main.js": "/react-style-editor/static/js/main.d8752594.chunk.js",
     "runtime~main.js": "/react-style-editor/static/js/runtime~main.4292b16b.js",
-    "static/js/2.1fe26d70.chunk.js": "/react-style-editor/static/js/2.1fe26d70.chunk.js",
+    "static/js/2.7e160450.chunk.js": "/react-style-editor/static/js/2.7e160450.chunk.js",
     "index.html": "/react-style-editor/index.html",
-    "precache-manifest.13ec9ad916656fc465edf8c0c0baa121.js": "/react-style-editor/precache-manifest.13ec9ad916656fc465edf8c0c0baa121.js",
+    "precache-manifest.0d744535a3720dcb500cff10046ebef3.js": "/react-style-editor/precache-manifest.0d744535a3720dcb500cff10046ebef3.js",
     "service-worker.js": "/react-style-editor/service-worker.js"
   }
 }
