@@ -1,6 +1,6 @@
 {
     "name": "react-style-editor",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "A React component that displays and edits CSS, similar to the browser's DevTools.",
     "main": "lib/index.js",
     "repository": {
