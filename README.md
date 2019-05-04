@@ -6,12 +6,9 @@
 
 A React component that displays and edits CSS, similar to the browser's DevTools.
 
-<center>
-  <img src="https://aurelain.github.io/react-style-editor/StyleEditor.png" />
-</center>
+[![Live demo](https://aurelain.github.io/react-style-editor/StyleEditor.png)](https://aurelain.github.io/react-style-editor/)
 
 ## [Live demo](https://aurelain.github.io/react-style-editor/)
-
 
 ## Features
 - Parses any CSS string and formats it in a familiar fashion
