@@ -258,9 +258,8 @@ class StyleEditor extends React.Component {
      */
     onTick = (id, desiredTick) => {
         const freshBlob = desiredTick ? unignore(this.currentRules, id) : ignore(this.currentRules, id);
-        if (this.isControlled) {
-            this.announceOnChange(freshBlob);
-        } else {
+        this.announceOnChange(freshBlob);
+        if (!this.isControlled) {
             this.setState({
                 internalValue: freshBlob,
             })
