@@ -22,7 +22,7 @@ const classes = stylize('StyleEditor', {
         fontFamily: 'Consolas, Liberation Mono, Menlo, monospace', // GitHub
         fontSize: '12px', // Chrome
         textAlign: 'left',
-        overflowY: 'auto',
+        overflow: 'auto',
         color: 'black',
         position: 'relative',
         cursor: 'default',

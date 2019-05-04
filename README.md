@@ -6,6 +6,13 @@
 
 A React component that displays and edits CSS, similar to the browser's DevTools.
 
+<center>
+  <img src="https://aurelain.github.io/react-style-editor/StyleEditor.png" />
+</center>
+
+## [Live demo](https://aurelain.github.io/react-style-editor/)
+
+
 ## Features
 - Parses any CSS string and formats it in a familiar fashion
 - Validates each rule and each declaration using the browsers's own engine
@@ -51,15 +58,34 @@ class Component extends React.Component {
 }
 ```
 
-## API
-TODO
+## Props
+
+
+|prop           |  type    | default     |description                                                 |
+|---------------|------------------------|----------------------------------------------------|--------|
+| `defaultValue`  | string   | `""`        | The initial CSS code
+| `value`         | string   | `undefined` | The controlled CSS code
+| `onChange`      | function | `null`      | A closure that receives a single argument, `string` or `array`, depending on the value of `outputFormats`
+| `outputFormats` | string   | `"pretty"`  | Comma-separated values of: `"preserved"`, `"machine"`, `"pretty"`
+| `readOnly`      | boolean  | `false`     | All interactions with the component are blocked
+
+
+All parameters are optional, but some are inter-related. For example, due to the nature of React, you should use `StyleEditor` either fully controlled or fully uncontrolled (see [this article](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html#preferred-solutions)).
+A short summary:
+- `defaultValue` => uncontrolled, the component is on its own
+- `value` => controlled => you must also use the `onChange` or `readOnly` properties.
+
+The above behavior is identical to that of normal React form elements, e.g. `<textarea/>`.
+
+Any other props are spread to the internal root.
+
+
 
 ## Ideas for the future
-- Live demo
 - Color swatches (similar to the browser)
 - Dropdown suggestions for properties/values (similar to the browser)
 - Ability to copy/delete fragments of code
-- Keyboard support for `TAB`, `:` and `UP`, `DOWN`
+- Keyboard support for `TAB`, `:` and `UP`/`DOWN` increments of numeric values
 - Prop for automatically mutating the code *after* validation
 - Theme support (similar to the browser)
 - Toggle view mode: tree/original
