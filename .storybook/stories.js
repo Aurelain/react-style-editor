@@ -36,15 +36,15 @@ div {
 `;
 
 let nameCount = 0;
-const name = (param) => param || 'C' + nameCount++;
 
 
 storiesOf('StyleEditor', module)
-.add('large', () => <StyleEditor css={large} onChange={data => console.log('data:',data)}/>)
-.add(name(), () => <StyleEditor css={`@import 'custom.css';`}/>)
-.add(name(), () => <StyleEditor/>)
-.add(name(), () => <StyleEditor css={`0div{mother:father;font-weight:bold}`}/>)
-.add(name(), () => <StyleEditor css={`div{background-color:red;background:blue;}`}/>)
-.add(name(), () => <StyleEditor css={` {mother:;: bold}`}/>)
+.add('empty', () => <StyleEditor/>)
+.add('large', () => <StyleEditor defaultValue={large}/>)
+.add('warning', () => <StyleEditor value={`@import 'custom.css';`}/>)
+.add('invalidRule', () => <StyleEditor defaultValue={`0div{mother:father;font-weight:bold}`}/>)
+.add('overwrite declarations', () => <StyleEditor defaultValue={`div{background-color:red;background:blue;}`}/>)
+.add('empty slots', () => <StyleEditor defaultValue={` {mother:;: bold}`}/>)
+.add('readOnly', () => <StyleEditor value={'div{color:red}'} readOnly/>)
 ;
 

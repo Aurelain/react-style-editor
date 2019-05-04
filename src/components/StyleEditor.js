@@ -41,28 +41,24 @@ const classes = stylize('StyleEditor', {
             background: '#ddd',
         },
     },
-    isEditing: {
+    isLocked: {
         '& *': {
             pointerEvents: 'none',
         }
     },
 });
+let hasControlledWarning = false;
 
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
 class StyleEditor extends React.Component {
 
-    state = {
-        isEditing: false,
-        hasArea: false,
-    };
-
     // Private variables:
     currentRules = [];
     memoRules = this.currentRules;   // a simulation of `memoize-one`
     memoCSS = '';                    // a simulation of `memoize-one`
-    previousPropsCSS;
+    isControlled = false;
 
     /**
      *
@@ -70,22 +66,25 @@ class StyleEditor extends React.Component {
     constructor(props) {
         super(props);
         prepareStyling();
+        this.state = {
+            isEditing: false,
+            hasArea: false,
+            internalValue: props.defaultValue,
+        };
     }
 
     /**
      *
      */
     render() {
-        const {css, className, ...other} = this.props;
-        const {isEditing, hasArea} = this.state;
+        const {value, className, readOnly, ...other} = this.props;
+        const {isEditing, hasArea, internalValue} = this.state;
         delete other.outputFormats; // not used in render
 
-        if (css !== this.previousPropsCSS) { // our parent changed the css!
-            this.currentRules = this.computeRules(css);
-            this.previousPropsCSS = css;
-        } else { // the local logic already computed the rules
-            // nothing to do
-        }
+        this.isControlled = checkIsControlled(this.props);
+        const usedValue = this.isControlled ? value : internalValue;
+
+        this.currentRules = this.computeRules(usedValue);
         const isEmpty = !this.currentRules.length;
 
         return (
@@ -96,7 +95,7 @@ class StyleEditor extends React.Component {
                 className={cls(
                     classes.root,
                     isEmpty && !hasArea && classes.isEmpty,
-                    isEditing && classes.isEditing,
+                    (isEditing || readOnly) && classes.isLocked,
                     className,
                 )}
             >
@@ -144,7 +143,9 @@ class StyleEditor extends React.Component {
         }
         for (const key in nextProps) {
             if (this.props[key] !== nextProps[key]) {
-                return true;
+                if (key !== 'defaultValue') { // we're ignoring changes to defaultValue
+                    return true;
+                }
             }
         }
         for (const key in nextState) {
@@ -180,70 +181,6 @@ class StyleEditor extends React.Component {
     /**
      *
      */
-    computeRulesFromPayload = (id, payload) => {
-        const {freshRules, freshNode, parentNode} = modify(this.currentRules, id, payload);
-        if (payload[AFTER_BEGIN]) { // can only be dispatched by AT/RULE
-            const node = createTemporaryDeclaration(payload[AFTER_BEGIN]);
-            freshNode.kids.unshift(node);
-
-        } else if (payload[BEFORE]) { // can only be dispatched by AT/RULE and can only create AT/RULE
-            const node = createTemporaryRule(payload[BEFORE]);
-            const siblings = parentNode.kids;
-            const index = siblings.findIndex(item => item.id === id);
-            siblings.splice(index, 0, node);
-
-        } else if (payload[AFTER]) { // can be dispatched by any type of node
-            let text = payload[AFTER];
-            let node;
-            switch (freshNode.type) { // freshNode is in fact the anchor node, NOT the node we're about to create
-                case ATRULE:
-                    if (freshNode.hasBraceBegin && !freshNode.hasBraceEnd) {
-                        text = '}' + text;
-                    } else if (!freshNode.hasSemicolon) {
-                        text = ';' + text;
-                    }
-                    node = createTemporaryRule(text);
-                    break;
-                case RULE:
-                    if (!freshNode.hasBraceEnd) {
-                        text = '}' + text;
-                    }
-                    node = createTemporaryRule(text);
-                    break;
-                case DECLARATION:
-                    if (!freshNode.hasSemicolon) {
-                        text = ';' + text;
-                    }
-                    node = createTemporaryDeclaration(text);
-                    break;
-                case COMMENT:
-                    if (!freshNode.hasSlashEnd) {
-                        text = '*/' + text;
-                    }
-                    if (parentNode.type === ATRULE) {
-                        node = createTemporaryRule(text);
-                    } else {
-                        node = createTemporaryDeclaration(text);
-                    }
-                    break;
-                default:
-                // nothing
-            }
-            const siblings = parentNode.kids;
-            const index = siblings.findIndex(item => item.id === id);
-            siblings.splice(index + 1, 0, node);
-
-        } else if (payload.value) {
-            freshNode.hasColon = true;
-        }
-        const temporaryBlob = stringify(freshRules);
-        // console.log(temporaryBlob);
-        return this.computeRules(temporaryBlob);
-    };
-
-    /**
-     *
-     */
     onEditBegin = () => {
         this.setState({
             isEditing: true,
@@ -256,30 +193,41 @@ class StyleEditor extends React.Component {
     onEditChange = (id, payload) => {
         const {onChange} = this.props;
         if (onChange) {
-            const freshRules = this.computeRulesFromPayload(id, payload);
-            this.announceOnChange(freshRules);
+            const freshBlob = computeBlobFromPayload(this.currentRules, id, payload);
+            this.announceOnChange(freshBlob);
         }
     };
 
     /**
      *
      */
-    announceOnChange = (rules) => {
+    announceOnChange = (rulesOrBlob) => {
         const {onChange, outputFormats} = this.props;
         if (onChange) {
+            let rules = typeof rulesOrBlob === 'string'? null : rulesOrBlob; // null means lazy initialization
             const formats = outputFormats.replace(/\s/g, '').split(',');
             const output = [];
             for (const format of formats) {
                 switch (format) {
                     case 'preserved':
-                        output.push(stringify(rules));
+                        if (rules) {
+                            output.push(stringify(rulesOrBlob));
+                        } else {
+                            output.push(rulesOrBlob);
+                        }
+                        break;
+                    case 'machine':
+                        if (!rules) {
+                            rules = this.computeRules(rulesOrBlob);
+                        }
+                        output.push(JSON.parse(JSON.stringify(rules))); // TODO: use something faster
                         break;
                     case 'pretty':
                     default:
+                        if (!rules) {
+                            rules = this.computeRules(rulesOrBlob);
+                        }
                         output.push(prettify(rules));
-                        break;
-                    case 'machine':
-                        output.push(JSON.parse(JSON.stringify(rules))); // TODO: use something faster
                         break;
                 }
             }
@@ -291,10 +239,18 @@ class StyleEditor extends React.Component {
      *
      */
     onEditEnd = (id, payload) => {
-        this.currentRules = this.computeRulesFromPayload(id, payload);
-        this.setState({
-            isEditing: false,
-        });
+        if (this.isControlled) {
+            this.setState({
+                isEditing: false,
+            });
+            // there's no need to do anything else. Our parent already has the payload from the onChange event
+
+        } else { // uncontrolled
+            this.setState({
+                isEditing: false,
+                internalValue: computeBlobFromPayload(this.currentRules, id, payload)
+            });
+        }
     };
 
     /**
@@ -302,9 +258,13 @@ class StyleEditor extends React.Component {
      */
     onTick = (id, desiredTick) => {
         const freshBlob = desiredTick ? unignore(this.currentRules, id) : ignore(this.currentRules, id);
-        this.currentRules = this.computeRules(freshBlob);
-        this.forceUpdate();
-        this.announceOnChange(this.currentRules);
+        if (this.isControlled) {
+            this.announceOnChange(freshBlob);
+        } else {
+            this.setState({
+                internalValue: freshBlob,
+            })
+        }
     };
 
     /**
@@ -333,8 +293,7 @@ class StyleEditor extends React.Component {
     onAreaChange = (id, payload) => {
         const {onChange} = this.props;
         if (onChange) {
-            const prettyBlob = prettify(this.computeRules(payload.selector));
-            onChange(prettyBlob);
+            this.announceOnChange(payload.selector);
         }
     };
 
@@ -342,11 +301,20 @@ class StyleEditor extends React.Component {
      *
      */
     onAreaBlur = (id, payload) => {
-        this.currentRules = this.computeRules(payload.selector);
-        this.setState({
-            isEditing: false,
-            hasArea: false,
-        });
+        if (this.isControlled) {
+            this.setState({
+                isEditing: false,
+                hasArea: false,
+            });
+            // there's no need to do anything else. Our parent already has the payload from the onChange event
+
+        } else { // uncontrolled
+            this.setState({
+                isEditing: false,
+                hasArea: false,
+                internalValue: payload.selector
+            });
+        }
     };
 
 }
@@ -354,6 +322,87 @@ class StyleEditor extends React.Component {
 // =====================================================================================================================
 //  H E L P E R S
 // =====================================================================================================================
+/**
+ *
+ */
+const checkIsControlled = (props) => {
+    if (props.value !== undefined) {
+        if (!props.onChange && !props.readOnly && !hasControlledWarning) {
+            hasControlledWarning = true;
+            if (window.console && window.console.warn) {
+                console.warn('You provided a `value` prop to StyleEditor without an `onChange` handler. ' +
+                    'This will render a read-only field. If the StyleEditor should be mutable, use `defaultValue`. ' +
+                    'Otherwise, set either `onChange` or `readOnly`.');
+            }
+        }
+        return true;
+    } else {
+        return false;
+    }
+};
+
+/**
+ *
+ */
+const computeBlobFromPayload = (rules, id, payload) => {
+    const {freshRules, freshNode, parentNode} = modify(rules, id, payload);
+    if (payload[AFTER_BEGIN]) { // can only be dispatched by AT/RULE
+        const node = createTemporaryDeclaration(payload[AFTER_BEGIN]);
+        freshNode.kids.unshift(node);
+
+    } else if (payload[BEFORE]) { // can only be dispatched by AT/RULE and can only create AT/RULE
+        const node = createTemporaryRule(payload[BEFORE]);
+        const siblings = parentNode.kids;
+        const index = siblings.findIndex(item => item.id === id);
+        siblings.splice(index, 0, node);
+
+    } else if (payload[AFTER]) { // can be dispatched by any type of node
+        let text = payload[AFTER];
+        let node;
+        switch (freshNode.type) { // freshNode is in fact the anchor node, NOT the node we're about to create
+            case ATRULE:
+                if (freshNode.hasBraceBegin && !freshNode.hasBraceEnd) {
+                    text = '}' + text;
+                } else if (!freshNode.hasSemicolon) {
+                    text = ';' + text;
+                }
+                node = createTemporaryRule(text);
+                break;
+            case RULE:
+                if (!freshNode.hasBraceEnd) {
+                    text = '}' + text;
+                }
+                node = createTemporaryRule(text);
+                break;
+            case DECLARATION:
+                if (!freshNode.hasSemicolon) {
+                    text = ';' + text;
+                }
+                node = createTemporaryDeclaration(text);
+                break;
+            case COMMENT:
+                if (!freshNode.hasSlashEnd) {
+                    text = '*/' + text;
+                }
+                if (parentNode.type === ATRULE) {
+                    node = createTemporaryRule(text);
+                } else {
+                    node = createTemporaryDeclaration(text);
+                }
+                break;
+            default:
+            // nothing
+        }
+        const siblings = parentNode.kids;
+        const index = siblings.findIndex(item => item.id === id);
+        siblings.splice(index + 1, 0, node);
+
+    } else if (payload.value) {
+        freshNode.hasColon = true;
+    }
+    return stringify(freshRules);
+};
+
 /**
  *
  */
@@ -392,5 +441,9 @@ const createTemporaryRule = (text) => {
 // =====================================================================================================================
 StyleEditor.defaultProps = {
     outputFormats: 'pretty',
+    onChange: null,
+    defaultValue: '',
+    value: undefined,
+    readOnly: false,
 };
 export default StyleEditor;

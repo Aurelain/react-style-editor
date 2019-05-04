@@ -183,7 +183,7 @@ class App extends React.PureComponent {
                         <Typography>You can type, copy or paste CSS here:</Typography>
                         <StyleEditor
                             className={clsx(classes.styleEditor, isLarge && classes.isLarge)}
-                            css={main}
+                            defaultValue={main}
                             key={mainCount}
                         />
                         <Button variant='contained' onClick={this.onCleanClick}>Clean</Button>
@@ -253,7 +253,7 @@ class App extends React.PureComponent {
                                 <td>
                                     <StyleEditor
                                         className={classes.comparisonStyleEditor}
-                                        css={COMPARISON_SAMPLE}
+                                        defaultValue={COMPARISON_SAMPLE}
                                         onChange={this.onComparisonStyleEditorChange}
                                         outputFormats='preserved,machine,pretty'
                                     />
@@ -307,7 +307,7 @@ class App extends React.PureComponent {
                                 <td>
                                     <StyleEditor
                                         className={classes.surgeryStyleEditor}
-                                        css={surgery}
+                                        value={surgery}
                                         onChange={this.onSurgeryStyleEditorChange}
                                         outputFormats='preserved'
                                     />

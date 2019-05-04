@@ -1,5 +1,5 @@
 export default `
-/* This is a stylesheet fragment from https://material.io */
+/* This is a stylesheet fragment from material.io */
 html {
     font-family: sans-serif;
     line-height: 1.15;
