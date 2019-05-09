@@ -4,15 +4,13 @@ import Rule from './Rule';
 import Area from './Area';
 import {AFTER, AFTER_BEGIN, ATRULE, BEFORE, COMMENT, DECLARATION, RULE} from '../utils/COMMON';
 import stylize, {prepareStyling, releaseStyling} from '../utils/stylize';
-import parse from '../utils/parse';
-import validate from '../utils/validate';
-import identify from '../utils/identify';
 import modify from '../utils/modify';
 import stringify from '../utils/stringify';
 import prettify from '../utils/prettify';
 import ignore from '../utils/ignore';
 import unignore from '../utils/unignore';
 import cls from '../utils/cls';
+import analyze from "../utils/analyze";
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -84,7 +82,7 @@ class StyleEditor extends React.Component {
         this.isControlled = checkIsControlled(this.props);
         const usedValue = this.isControlled ? value : internalValue;
 
-        this.currentRules = this.computeRules(usedValue);
+        this.currentRules = typeof usedValue === 'string'? this.computeRules(usedValue) : usedValue;
         const isEmpty = !this.currentRules.length;
 
         return (
@@ -170,9 +168,7 @@ class StyleEditor extends React.Component {
         if (this.memoCSS === css) {
             return this.memoRules;
         }
-        const rules = parse(css);
-        validate(rules);
-        identify(rules);
+        const rules = analyze(css);
         this.memoCSS = css;
         this.memoRules = rules;
         return rules;

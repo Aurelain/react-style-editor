@@ -76,14 +76,20 @@ The above behavior is identical to that of normal React form elements, e.g. `<te
 
 Any other props are spread to the internal root.
 
+## Exports
+Besides the default export (`StyleEditor`), there are also a few utility functions exported:
+- `analyze()`: ouputs the `machine` format
+- `parse()`: a lighter version of `analyze()`
+- `stringify()`: outputs the `preserved` format
+- `prettify()`: outputs the `pretty` format
 
+They all expect a CSS string as parameter and are useful if you don't want to use the React component and wait for its `onChange`.
 
-## Ideas for the future
+## Wishlist
 - Color swatches (similar to the browser)
 - Dropdown suggestions for properties/values (similar to the browser)
 - Ability to copy/delete fragments of code
 - Keyboard support for `TAB`, `:` and `UP`/`DOWN` increments of numeric values
-- Prop for automatically mutating the code *after* validation
 - Theme support (similar to the browser)
 - Toggle view mode: tree/original
 - Undo/redo
