@@ -2,10 +2,6 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import StyleEditor from '../src/components/StyleEditor';
 
-
-
-
-
 const large = `
 div {
     background-color:red;
@@ -37,15 +33,12 @@ div {
 
 let nameCount = 0;
 
-
 storiesOf('StyleEditor', module)
-.add('empty', () => <StyleEditor/>)
-.add('large', () => <StyleEditor defaultValue={large}/>)
-.add('warning', () => <StyleEditor value={`@import 'custom.css';`}/>)
-.add('height forced', () => <StyleEditor defaultValue={`div{color:red}`} style={{height:100}}/>)
-.add('invalidRule', () => <StyleEditor defaultValue={`0div{mother:father;font-weight:bold}`}/>)
-.add('overwrite declarations', () => <StyleEditor defaultValue={`div{background-color:red;background:blue;}`}/>)
-.add('empty slots', () => <StyleEditor defaultValue={` {mother:;: bold}`}/>)
-.add('readOnly', () => <StyleEditor value={'div{color:red}'} readOnly/>)
-;
-
+    .add('empty', () => <StyleEditor />)
+    .add('large', () => <StyleEditor defaultValue={large} />)
+    .add('warning', () => <StyleEditor value={`@import 'custom.css';`} />)
+    .add('height forced', () => <StyleEditor defaultValue={`div{color:red}`} style={{height: 100}} />)
+    .add('invalidRule', () => <StyleEditor defaultValue={`0div{mother:father;font-weight:bold}`} />)
+    .add('overwrite declarations', () => <StyleEditor defaultValue={`div{background-color:red;background:blue;}`} />)
+    .add('empty slots', () => <StyleEditor defaultValue={` {mother:;: bold}`} />)
+    .add('readOnly', () => <StyleEditor value={'div{color:red}'} readOnly />);

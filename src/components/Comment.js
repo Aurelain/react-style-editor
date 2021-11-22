@@ -6,7 +6,6 @@ import Checkbox from './Checkbox';
 import Area from './Area';
 import {AFTER} from '../utils/COMMON';
 
-
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
@@ -34,7 +33,6 @@ const classes = stylize('Comment', {
 //  C O M P O N E N T
 // =====================================================================================================================
 class Comment extends React.PureComponent {
-
     state = {
         isEditingContent: false,
         isEditingAfter: false,
@@ -50,34 +48,22 @@ class Comment extends React.PureComponent {
         const isLegit = !!content.match(/^\s*[-a-zA-Z0-9_]*\s*:|[{}()*@;/\]]/);
 
         return (
-            <div
-                className={classes.root}
-                onClick={this.onCommentClick}
-            >
-                {
-                    isLegit &&
-                    <Checkbox id={id} tick={0} onTick={onTick}/>
-                }
+            <div className={classes.root} onClick={this.onCommentClick}>
+                {isLegit && <Checkbox id={id} tick={0} onTick={onTick} />}
 
-                {
-                    isEditingContent ?
-                        this.renderArea('content', content):
-                        <span
-                            className={classes.content}
-                            title={content}
-                            onClick={this.onContentClick}
-                        >
-                            {'/*' + clean(content) + '*/'}
-                        </span>
-                }
-                {
-                    isEditingAfter &&
+                {isEditingContent ? (
+                    this.renderArea('content', content)
+                ) : (
+                    <span className={classes.content} title={content} onClick={this.onContentClick}>
+                        {'/*' + clean(content) + '*/'}
+                    </span>
+                )}
+                {isEditingAfter && (
                     <div className={classes.after}>
-                        <Checkbox tick={1}/>
+                        <Checkbox tick={1} />
                         {this.renderArea(AFTER, '')}
                     </div>
-                }
-
+                )}
             </div>
         );
     }
@@ -94,7 +80,7 @@ class Comment extends React.PureComponent {
                 onChange={onEditChange}
                 onBlur={this.onAreaBlur}
             />
-        )
+        );
     };
 
     /**

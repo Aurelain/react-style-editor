@@ -3,7 +3,6 @@ import React from 'react';
 import cls from '../utils/cls';
 import stylize from '../utils/stylize';
 
-
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
@@ -33,7 +32,8 @@ const classes = stylize('Checkbox', {
             transform: 'rotate(45deg)',
         },
     },
-    mixed: { // currently unused
+    mixed: {
+        // currently unused
         '&:after': {
             position: 'absolute',
             content: '""',
@@ -50,8 +50,6 @@ const classes = stylize('Checkbox', {
 //  C O M P O N E N T
 // =====================================================================================================================
 class Checkbox extends React.PureComponent {
-
-
     /**
      *
      */
@@ -59,11 +57,7 @@ class Checkbox extends React.PureComponent {
         const {tick} = this.props;
         return (
             <div
-                className={cls(
-                    classes.root,
-                    tick === 1 && classes.checked,
-                    tick === 2 && classes.mixed,
-                )}
+                className={cls(classes.root, tick === 1 && classes.checked, tick === 2 && classes.mixed)}
                 onClick={this.onClick}
             />
         );
@@ -76,8 +70,7 @@ class Checkbox extends React.PureComponent {
         event.stopPropagation();
         const {onTick, id, tick} = this.props;
         onTick(id, [true, false, true][tick]); // 0 => true, 1 => false, 2 => true
-    }
-
+    };
 }
 
 // =====================================================================================================================

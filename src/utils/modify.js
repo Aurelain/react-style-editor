@@ -2,7 +2,6 @@
 
 */
 
-
 /**
  *
  */
@@ -14,8 +13,8 @@ const modify = (nodeList, nodeId, payload) => {
     const freshNode = node;
     for (let i = ancestors.length - 1; i >= 0; i--) {
         const oldParent = ancestors[i];
-        const parent = ancestors[i] = Object.assign({}, oldParent);
-        const kids = parent.kids = parent.kids.slice();
+        const parent = (ancestors[i] = Object.assign({}, oldParent));
+        const kids = (parent.kids = parent.kids.slice());
         const index = kids.indexOf(oldNode);
         kids[index] = node;
         oldNode = oldParent;
@@ -28,7 +27,6 @@ const modify = (nodeList, nodeId, payload) => {
         parentNode: ancestors[ancestors.length - 1],
     };
 };
-
 
 const findAncestors = (nodeList, nodeId) => {
     const path = [{kids: nodeList}];

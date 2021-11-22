@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8" />
         <style>
             table {
                 font-family: Consolas, monospace;
@@ -11,7 +11,8 @@
                 font-size: small;
             }
 
-            td, th {
+            td,
+            th {
                 width: 200px;
                 max-width: 200px;
                 border: solid 1px gray;
@@ -30,8 +31,8 @@
                 return {
                     toEqual: (expected) => {
                         result.expected = expected;
-                    }
-                }
+                    },
+                };
             };
         </script>
         <script type="module" src="ignore.test.js"></script>
@@ -42,7 +43,8 @@
                 const {it, results} = window.db;
                 let totalCount = 0;
                 let correctCount = 0;
-                let markup = '' +
+                let markup =
+                    '' +
                     '<table>' +
                     '   <tr>' +
                     '       <th>Input</th>' +

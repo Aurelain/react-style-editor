@@ -6,7 +6,6 @@ import {RULE, COMMENT, SLASH_SUBSTITUTE} from './COMMON.js';
 import modify from './modify.js';
 import stringify from './stringify.js';
 
-
 /**
  *
  */
@@ -25,7 +24,11 @@ const unignore = (rules, id) => {
  */
 const unignoreComment = (node) => {
     const prefix = node.prefix; // backup
-    const content = node.content.split(SLASH_SUBSTITUTE + '*').join('/*').split('*' + SLASH_SUBSTITUTE).join('*/');
+    const content = node.content
+        .split(SLASH_SUBSTITUTE + '*')
+        .join('/*')
+        .split('*' + SLASH_SUBSTITUTE)
+        .join('*/');
     for (const key in node) {
         delete node[key];
     }

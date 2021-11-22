@@ -10,7 +10,6 @@ import clean from '../utils/clean';
 import Area from './Area';
 import Alert from './Alert';
 
-
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
@@ -55,7 +54,6 @@ const classes = stylize('Rule', {
 //  C O M P O N E N T
 // =====================================================================================================================
 class Rule extends React.PureComponent {
-
     state = {
         isEditingSelector: false,
         isEditingBefore: false,
@@ -91,79 +89,62 @@ class Rule extends React.PureComponent {
 
         return (
             <div className={classes.root}>
-
                 {isEditingBefore && this.renderArea(BEFORE)}
 
-                {
-                    !isTop &&
-                    <div
-                        className={classes.header}
-                        onClick={this.onHeaderClick}
-                    >
-                        <Checkbox id={id} tick={1} onTick={onTick}/>
+                {!isTop && (
+                    <div className={classes.header} onClick={this.onHeaderClick}>
+                        <Checkbox id={id} tick={1} onTick={onTick} />
 
-                        {isEditingSelector ?
+                        {isEditingSelector ? (
                             <Area
                                 defaultValue={selector.trim()}
                                 id={id}
                                 payloadProperty={'selector'}
                                 onChange={onEditChange}
                                 onBlur={this.onAreaBlur}
-                            /> :
+                            />
+                        ) : (
                             <span
                                 className={cls(
                                     classes.selector,
                                     !cleanSelector && classes.isEmpty,
-                                    !isValid && classes.isInvalid,
+                                    !isValid && classes.isInvalid
                                 )}
                                 onClick={this.onSelectorClick}
                             >
                                 {cleanSelector}
                             </span>
-                        }
-                        {
-                            !isValid &&
-                            <Alert/>
-                        }
-                        {
-                            !hasSemicolon &&
-                            <span onClick={this.onBraceClick}>{' {'}</span>
-                        }
+                        )}
+                        {!isValid && <Alert />}
+                        {!hasSemicolon && <span onClick={this.onBraceClick}>{' {'}</span>}
                     </div>
-                }
+                )}
 
                 <div className={cls(classes.block, isTop && classes.blockIsTop)}>
-
                     {isEditingAfterBegin && this.renderArea(AFTER_BEGIN)}
 
-                    {
-                        kids.map(item => {
-                            const Component = typeToComponent[item.type];
-                            return (
-                                <Component
-                                    {...item}
-                                    key={item.id}
-                                    onEditBegin={onEditBegin}
-                                    onEditChange={onEditChange}
-                                    onEditEnd={onEditEnd}
-                                    onTick={onTick}
-                                />
-                            );
-                        })}
+                    {kids.map((item) => {
+                        const Component = typeToComponent[item.type];
+                        return (
+                            <Component
+                                {...item}
+                                key={item.id}
+                                onEditBegin={onEditBegin}
+                                onEditChange={onEditChange}
+                                onEditEnd={onEditEnd}
+                                onTick={onTick}
+                            />
+                        );
+                    })}
                 </div>
 
-                {
-                    !isTop && !hasSemicolon &&
-                    <div
-                        className={classes.footer}
-                        onClick={this.onFooterClick}
-                    >
+                {!isTop && !hasSemicolon && (
+                    <div className={classes.footer} onClick={this.onFooterClick}>
                         {'}'}
                     </div>
-                }
+                )}
 
                 {isEditingAfter && this.renderArea(AFTER)}
-
             </div>
         );
     }
@@ -175,16 +156,16 @@ class Rule extends React.PureComponent {
         const {id, onEditChange} = this.props;
         return (
             <div>
-                <Checkbox tick={1}/>
+                <Checkbox tick={1} />
                 <Area
-                        defaultValue={''}
-                        id={id}
-                        payloadProperty={payloadProperty}
-                        onChange={onEditChange}
-                        onBlur={this.onAreaBlur}
+                    defaultValue={''}
+                    id={id}
+                    payloadProperty={payloadProperty}
+                    onChange={onEditChange}
+                    onBlur={this.onAreaBlur}
                 />
             </div>
-        )
+        );
     };
 
     /**

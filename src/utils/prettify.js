@@ -12,7 +12,6 @@ const prettify = (kids) => {
     return flatten(kids).join('');
 };
 
-
 /**
  *
  */
@@ -42,7 +41,7 @@ const flatten = (kids, accumulator = [], indent = '') => {
                 accumulator.push(indent + clean(item.property) + ': ' + clean(item.value) + ';\r\n');
                 break;
             case COMMENT:
-                accumulator.push(indent + '/*' +item.content + '*/\r\n');
+                accumulator.push(indent + '/*' + item.content + '*/\r\n');
                 break;
             default:
             // nothing
@@ -50,6 +49,5 @@ const flatten = (kids, accumulator = [], indent = '') => {
     }
     return accumulator;
 };
-
 
 export default prettify;

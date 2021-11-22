@@ -4,17 +4,14 @@ import validate from '../src/utils/validate.js';
 import {ATRULE, COMMENT, DECLARATION, RULE} from '../src/utils/COMMON.js';
 
 const tests = [
-
     // =================================================================================================================
     //                                                 R U L E S E T
     // =================================================================================================================
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
-        ``,
-        [],
-    ],
+    [1, ``, []],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `  `,
         [
             {
@@ -28,7 +25,8 @@ const tests = [
         ],
     ],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `  {background:red}`,
         [
             {
@@ -51,7 +49,8 @@ const tests = [
         ],
     ],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `div{background-color:red;background:blue}`,
         [
             {
@@ -82,7 +81,8 @@ const tests = [
         ],
     ],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `div{background:blue;background:blue}`,
         [
             {
@@ -113,7 +113,8 @@ const tests = [
         ],
     ],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `div{background:blue}div{background:red}`,
         [
             {
@@ -153,7 +154,8 @@ const tests = [
         ],
     ],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `  @charset  "utf-8"  ;`,
         [
             {
@@ -168,7 +170,8 @@ const tests = [
         ],
     ],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `@viewport{  }`,
         [
             {
@@ -187,28 +190,29 @@ const tests = [
                         isValid: false,
                     },
                 ],
-            }
+            },
         ],
     ],
     // -----------------------------------------------------------------------------------------------------------------
-    [1,
+    [
+        1,
         `*.foo{}`,
         [
             {
                 type: RULE,
-                selector: `*.foo`,  // Note: the browser removes the star in the stylesheet
+                selector: `*.foo`, // Note: the browser removes the star in the stylesheet
                 hasBraceBegin: true,
                 hasBraceEnd: true,
                 isValid: true,
                 children: [],
-            }
+            },
         ],
     ],
 ];
 
 const normalTests = [];
 const importantTests = [];
-tests.forEach(item => {
+tests.forEach((item) => {
     if (item[0] === 1) {
         normalTests.push(item);
     } else if (item[0] === 2) {
@@ -217,4 +221,4 @@ tests.forEach(item => {
 });
 
 const usedTests = importantTests.length ? importantTests : normalTests;
-usedTests.forEach(item => it(item[1], () => expect(validate(parse(item[1]))).toEqual(item[2])));
+usedTests.forEach((item) => it(item[1], () => expect(validate(parse(item[1]))).toEqual(item[2])));

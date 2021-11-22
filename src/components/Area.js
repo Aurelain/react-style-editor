@@ -2,7 +2,6 @@ import React from 'react';
 
 import stylize from '../utils/stylize';
 
-
 // =====================================================================================================================
 //  D E C L A R A T I O N S
 // =====================================================================================================================
@@ -27,7 +26,6 @@ const classes = stylize('Area', {
 //  C O M P O N E N T
 // =====================================================================================================================
 class Area extends React.PureComponent {
-
     ref = React.createRef();
 
     /**
@@ -72,7 +70,7 @@ class Area extends React.PureComponent {
             textarea.style.display = 'inline-block';
             textarea.style.width = textarea.scrollWidth + 'px';
         }
-        textarea.style.height = (textarea.scrollHeight + 1) + 'px';
+        textarea.style.height = textarea.scrollHeight + 1 + 'px';
     };
 
     /**
@@ -89,7 +87,7 @@ class Area extends React.PureComponent {
         event.stopPropagation(); // we're handling the change manually and this event collides with us upstream
         this.autoSize();
         const {onChange, id, payloadProperty} = this.props;
-        onChange(id, {[payloadProperty] : event.currentTarget.value});
+        onChange(id, {[payloadProperty]: event.currentTarget.value});
     };
 
     /**
@@ -97,7 +95,7 @@ class Area extends React.PureComponent {
      */
     onBlur = (event) => {
         const {onBlur, id, payloadProperty} = this.props;
-        onBlur(id, {[payloadProperty] : event.currentTarget.value});
+        onBlur(id, {[payloadProperty]: event.currentTarget.value});
     };
 
     /**
@@ -131,7 +129,7 @@ class Area extends React.PureComponent {
 /**
  *
  */
-const cancelEvent = event => {
+const cancelEvent = (event) => {
     event.preventDefault();
     event.stopPropagation();
 };

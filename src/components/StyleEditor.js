@@ -10,7 +10,7 @@ import prettify from '../utils/prettify';
 import ignore from '../utils/ignore';
 import unignore from '../utils/unignore';
 import cls from '../utils/cls';
-import analyze from "../utils/analyze";
+import analyze from '../utils/analyze';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -29,7 +29,7 @@ const classes = stylize('StyleEditor', {
         padding: 4,
         '& *': {
             boxSizing: 'border-box',
-        }
+        },
     },
     isEmpty: {
         minHeight: 20,
@@ -42,7 +42,7 @@ const classes = stylize('StyleEditor', {
     isLocked: {
         '& *': {
             pointerEvents: 'none',
-        }
+        },
     },
 });
 let hasControlledWarning = false;
@@ -51,11 +51,10 @@ let hasControlledWarning = false;
 //  C O M P O N E N T
 // =====================================================================================================================
 class StyleEditor extends React.Component {
-
     // Private variables:
     currentRules = [];
-    memoRules = this.currentRules;   // a simulation of `memoize-one`
-    memoCSS = '';                    // a simulation of `memoize-one`
+    memoRules = this.currentRules; // a simulation of `memoize-one`
+    memoCSS = ''; // a simulation of `memoize-one`
     isControlled = false;
 
     /**
@@ -82,7 +81,7 @@ class StyleEditor extends React.Component {
         this.isControlled = checkIsControlled(this.props);
         const usedValue = this.isControlled ? value : internalValue;
 
-        this.currentRules = typeof usedValue === 'string'? this.computeRules(usedValue) : usedValue;
+        this.currentRules = typeof usedValue === 'string' ? this.computeRules(usedValue) : usedValue;
         const isEmpty = !this.currentRules.length;
 
         return (
@@ -94,11 +93,10 @@ class StyleEditor extends React.Component {
                     classes.root,
                     isEmpty && !hasArea && classes.isEmpty,
                     (isEditing || readOnly) && classes.isLocked,
-                    className,
+                    className
                 )}
             >
-                {
-                    !isEmpty &&
+                {!isEmpty && (
                     <Rule
                         selector={'root'}
                         kids={this.currentRules}
@@ -108,9 +106,8 @@ class StyleEditor extends React.Component {
                         onEditEnd={this.onEditEnd}
                         onTick={this.onTick}
                     />
-                }
-                {
-                    hasArea &&
+                )}
+                {hasArea && (
                     <Area
                         id={null}
                         defaultValue={''}
@@ -118,7 +115,7 @@ class StyleEditor extends React.Component {
                         onChange={this.onAreaChange}
                         onBlur={this.onAreaBlur}
                     />
-                }
+                )}
             </div>
         );
     }
@@ -137,11 +134,12 @@ class StyleEditor extends React.Component {
      */
     shouldComponentUpdate(nextProps, nextState, nextContext) {
         if (this.state.isEditing) {
-            return (nextState.isEditing === false); // allow updates only in order to exit editing mode
+            return nextState.isEditing === false; // allow updates only in order to exit editing mode
         }
         for (const key in nextProps) {
             if (this.props[key] !== nextProps[key]) {
-                if (key !== 'defaultValue') { // we're ignoring changes to defaultValue
+                if (key !== 'defaultValue') {
+                    // we're ignoring changes to defaultValue
                     return true;
                 }
             }
@@ -180,7 +178,7 @@ class StyleEditor extends React.Component {
     onEditBegin = () => {
         this.setState({
             isEditing: true,
-        })
+        });
     };
 
     /**
@@ -200,7 +198,7 @@ class StyleEditor extends React.Component {
     announceOnChange = (rulesOrBlob) => {
         const {onChange, outputFormats} = this.props;
         if (onChange) {
-            let rules = typeof rulesOrBlob === 'string'? null : rulesOrBlob; // null means lazy initialization
+            let rules = typeof rulesOrBlob === 'string' ? null : rulesOrBlob; // null means lazy initialization
             const formats = outputFormats.replace(/\s/g, '').split(',');
             const output = [];
             for (const format of formats) {
@@ -227,7 +225,7 @@ class StyleEditor extends React.Component {
                         break;
                 }
             }
-            onChange(output.length > 1 ? output : (output[0] || ''));
+            onChange(output.length > 1 ? output : output[0] || '');
         }
     };
 
@@ -240,11 +238,11 @@ class StyleEditor extends React.Component {
                 isEditing: false,
             });
             // there's no need to do anything else. Our parent already has the payload from the onChange event
-
-        } else { // uncontrolled
+        } else {
+            // uncontrolled
             this.setState({
                 isEditing: false,
-                internalValue: computeBlobFromPayload(this.currentRules, id, payload)
+                internalValue: computeBlobFromPayload(this.currentRules, id, payload),
             });
         }
     };
@@ -258,7 +256,7 @@ class StyleEditor extends React.Component {
         if (!this.isControlled) {
             this.setState({
                 internalValue: freshBlob,
-            })
+            });
         }
     };
 
@@ -302,16 +300,15 @@ class StyleEditor extends React.Component {
                 hasArea: false,
             });
             // there's no need to do anything else. Our parent already has the payload from the onChange event
-
-        } else { // uncontrolled
+        } else {
+            // uncontrolled
             this.setState({
                 isEditing: false,
                 hasArea: false,
-                internalValue: payload.selector
+                internalValue: payload.selector,
             });
         }
     };
-
 }
 
 // =====================================================================================================================
@@ -325,9 +322,11 @@ const checkIsControlled = (props) => {
         if (!props.onChange && !props.readOnly && !hasControlledWarning) {
             hasControlledWarning = true;
             if (window.console && window.console.warn) {
-                console.warn('You provided a `value` prop to StyleEditor without an `onChange` handler. ' +
-                    'This will render a read-only field. If the StyleEditor should be mutable, use `defaultValue`. ' +
-                    'Otherwise, set either `onChange` or `readOnly`.');
+                console.warn(
+                    'You provided a `value` prop to StyleEditor without an `onChange` handler. ' +
+                        'This will render a read-only field. If the StyleEditor should be mutable, use `defaultValue`. ' +
+                        'Otherwise, set either `onChange` or `readOnly`.'
+                );
             }
         }
         return true;
@@ -341,20 +340,23 @@ const checkIsControlled = (props) => {
  */
 const computeBlobFromPayload = (rules, id, payload) => {
     const {freshRules, freshNode, parentNode} = modify(rules, id, payload);
-    if (payload[AFTER_BEGIN]) { // can only be dispatched by AT/RULE
+    if (payload[AFTER_BEGIN]) {
+        // can only be dispatched by AT/RULE
         const node = createTemporaryDeclaration(payload[AFTER_BEGIN]);
         freshNode.kids.unshift(node);
-
-    } else if (payload[BEFORE]) { // can only be dispatched by AT/RULE and can only create AT/RULE
+    } else if (payload[BEFORE]) {
+        // can only be dispatched by AT/RULE and can only create AT/RULE
         const node = createTemporaryRule(payload[BEFORE]);
         const siblings = parentNode.kids;
-        const index = siblings.findIndex(item => item.id === id);
+        const index = siblings.findIndex((item) => item.id === id);
         siblings.splice(index, 0, node);
-
-    } else if (payload[AFTER]) { // can be dispatched by any type of node
+    } else if (payload[AFTER]) {
+        // can be dispatched by any type of node
         let text = payload[AFTER];
         let node;
-        switch (freshNode.type) { // freshNode is in fact the anchor node, NOT the node we're about to create
+        switch (
+            freshNode.type // freshNode is in fact the anchor node, NOT the node we're about to create
+        ) {
             case ATRULE:
                 if (freshNode.hasBraceBegin && !freshNode.hasBraceEnd) {
                     text = '}' + text;
@@ -389,9 +391,8 @@ const computeBlobFromPayload = (rules, id, payload) => {
             // nothing
         }
         const siblings = parentNode.kids;
-        const index = siblings.findIndex(item => item.id === id);
+        const index = siblings.findIndex((item) => item.id === id);
         siblings.splice(index + 1, 0, node);
-
     } else if (payload.value) {
         freshNode.hasColon = true;
     }
@@ -402,33 +403,38 @@ const computeBlobFromPayload = (rules, id, payload) => {
  *
  */
 const createTemporaryDeclaration = (text) => {
-    if (!text.match(/;\s*$/)) { // doesn't end with semicolon
+    if (!text.match(/;\s*$/)) {
+        // doesn't end with semicolon
         text += ';'; // close it
     }
     return {
         type: DECLARATION,
         property: text,
         value: '',
-    }
+    };
 };
 
 /**
  *
  */
 const createTemporaryRule = (text) => {
-    if (text.match(/^\s*@/)) { // ATRULE
-        if (!text.match(/[{};]/)) { // doesn't contain braces or semicolons
+    if (text.match(/^\s*@/)) {
+        // ATRULE
+        if (!text.match(/[{};]/)) {
+            // doesn't contain braces or semicolons
             text += ';'; // close it. We assume this is not a nested ATRULE
         }
-    } else { // RULE
-        if (!text.match(/[{}]/)) { // doesn't contain braces
+    } else {
+        // RULE
+        if (!text.match(/[{}]/)) {
+            // doesn't contain braces
             text += '{}'; // close it
         }
     }
     return {
         type: RULE,
         selector: text,
-    }
+    };
 };
 
 // =====================================================================================================================

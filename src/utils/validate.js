@@ -25,12 +25,14 @@ const validateRules = (list, parentPrefix, parentSuffix, parentFingerprint) => {
         const rulePrefix = parentPrefix + rule.selector + (rule.hasBraceBegin ? '{' : '');
         const ruleSuffix = (rule.hasBraceEnd ? '}' : '') + (rule.hasSemicolon ? ';' : '') + parentSuffix;
         const fingerprint = inAndOut(rulePrefix + ruleSuffix);
-        if (fingerprint !== parentFingerprint) { // the browser accepted our rule
+        if (fingerprint !== parentFingerprint) {
+            // the browser accepted our rule
             rule.isValid = true;
             if (rule.kids.length) {
                 if (rule.type === ATRULE) {
                     validateRules(rule.kids, rulePrefix, ruleSuffix, fingerprint);
-                } else { // RULE
+                } else {
+                    // RULE
                     validateDeclarations(rule.kids, rulePrefix, ruleSuffix, fingerprint);
                 }
             }
@@ -49,15 +51,17 @@ const validateRules = (list, parentPrefix, parentSuffix, parentFingerprint) => {
 const validateDeclarations = (list, parentPrefix, parentSuffix, parentFingerprint) => {
     let fingerprint = parentFingerprint;
     let block = '';
-    for (let i = list.length - 1; i >= 0; i--) { // we traverse backwards to detect overruled declarations
+    for (let i = list.length - 1; i >= 0; i--) {
+        // we traverse backwards to detect overruled declarations
         const declaration = list[i];
         if (declaration.type === COMMENT) {
             continue;
         }
-        block = (declaration.hasSemicolon? ';' : '') + block;
-        block = declaration.property + (declaration.hasColon? ':' : '') + declaration.value + block;
+        block = (declaration.hasSemicolon ? ';' : '') + block;
+        block = declaration.property + (declaration.hasColon ? ':' : '') + declaration.value + block;
         const freshFingerprint = inAndOut(parentPrefix + block + parentSuffix);
-        if (fingerprint !== freshFingerprint) { // the browser accepted our declaration
+        if (fingerprint !== freshFingerprint) {
+            // the browser accepted our declaration
             declaration.isValid = true;
             fingerprint = freshFingerprint;
         } else {
@@ -120,7 +124,6 @@ const createPlayground = () => {
 const destroyPlayground = () => {
     sheet = null;
 };
-
 
 export default validate;
 export {destroyPlayground};

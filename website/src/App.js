@@ -96,7 +96,7 @@ const styles = {
             },
         },
     },
-    exampleSurgery:{
+    exampleSurgery: {
         marginTop: 32,
     },
     surgeryTextarea: {
@@ -110,7 +110,7 @@ const styles = {
     surgeryStyleEditor: {
         height: 240,
         border: 'none !important',
-    }
+    },
 };
 const SMALL_SAMPLE = `
     div{color:red;foo}
@@ -122,7 +122,8 @@ const SMALL_SAMPLE = `
     }
 `;
 const COMPARISON_SAMPLE = 'div{color:red;foo';
-const SURGERY_SAMPLE = 'html{font-family:sans-serif;line-height:1.15;-ms-text-size-adjust:100%;' +
+const SURGERY_SAMPLE =
+    'html{font-family:sans-serif;line-height:1.15;-ms-text-size-adjust:100%;' +
     '-webkit-text-size-adjust:100%}body{margin:0}article,aside,footer,header,nav,section{display:block}' +
     'h1{font-size:2em;margin:.67em 0}figcaption,figure{display:block}figure{margin:1em 40px}' +
     'hr{box-sizing:content-box;height:0;overflow:visible}';
@@ -131,7 +132,6 @@ const SURGERY_SAMPLE = 'html{font-family:sans-serif;line-height:1.15;-ms-text-si
 //  C O M P O N E N T
 // =====================================================================================================================
 class App extends React.PureComponent {
-
     state = {
         isLarge: false,
         main: SMALL_SAMPLE,
@@ -142,41 +142,30 @@ class App extends React.PureComponent {
         surgery: SURGERY_SAMPLE,
     };
 
-
     render() {
         const {classes} = this.props;
-        const {
-            isLarge,
-            main,
-            mainCount,
-            comparisonPreserved,
-            comparisonMachine,
-            comparisonPretty,
-            surgery
-        } = this.state;
+        const {isLarge, main, mainCount, comparisonPreserved, comparisonMachine, comparisonPretty, surgery} =
+            this.state;
         return (
             <div className={classes.root}>
-
                 <div className={clsx(classes.masthead, classes.container)}>
-
                     <iframe
                         className={classes.stars}
                         title={'GitHub'}
-                        src={'https://ghbtns.com/github-btn.html?user=Aurelain&repo=react-style-editor&' +
-                        'type=star&count=true&size=large'}
+                        src={
+                            'https://ghbtns.com/github-btn.html?user=Aurelain&repo=react-style-editor&' +
+                            'type=star&count=true&size=large'
+                        }
                     />
 
-                    <Typography variant='h2' gutterBottom>
+                    <Typography variant="h2" gutterBottom>
                         React Style Editor
                     </Typography>
 
-                    <Typography variant='subtitle1'>
+                    <Typography variant="subtitle1">
                         A React component that displays and edits CSS, similar to the browser's DevTools.
                     </Typography>
-
-
                 </div>
-
 
                 <section className={classes.main}>
                     <div className={classes.container}>
@@ -186,66 +175,57 @@ class App extends React.PureComponent {
                             defaultValue={main}
                             key={mainCount}
                         />
-                        <Button variant='contained' onClick={this.onCleanClick}>Clean</Button>
-                        {' '}
-                        <Button variant='contained' onClick={this.onLargeClick}>Use a large sample</Button>
+                        <Button variant="contained" onClick={this.onCleanClick}>
+                            Clean
+                        </Button>{' '}
+                        <Button variant="contained" onClick={this.onLargeClick}>
+                            Use a large sample
+                        </Button>
                     </div>
                 </section>
 
                 <div className={clsx(classes.features, classes.container)}>
-                    <Typography variant='h4' gutterBottom>Features</Typography>
+                    <Typography variant="h4" gutterBottom>
+                        Features
+                    </Typography>
                     <ul>
-                        <li>
-                            Parses any CSS string and formats it in a familiar fashion
-                        </li>
-                        <li>
-                            Validates each rule and each declaration using the browsers's own engine
-                        </li>
-                        <li>
-                            Facilitates commenting the CSS code through checkbox toggling
-                        </li>
-                        <li>
-                            Allows easy additions by clicking next to the desired location
-                        </li>
-                        <li>
-                            Has no dependencies (other than React)
-                        </li>
-                        <li>
-                            Is tiny (&lt; 10 KB minified)
-                        </li>
-                        <li>
-                            Is customizable through classes
-                        </li>
-                        <li>
-                            Offers 3 output formats:
-                        </li>
+                        <li>Parses any CSS string and formats it in a familiar fashion</li>
+                        <li>Validates each rule and each declaration using the browsers's own engine</li>
+                        <li>Facilitates commenting the CSS code through checkbox toggling</li>
+                        <li>Allows easy additions by clicking next to the desired location</li>
+                        <li>Has no dependencies (other than React)</li>
+                        <li>Is tiny (&lt; 10 KB minified)</li>
+                        <li>Is customizable through classes</li>
+                        <li>Offers 3 output formats:</li>
                         <ul>
-                            <li>
-                                the code with preserved formatting
-                            </li>
-                            <li>
-                                a machine-friendly model of the code (recursive array of objects)
-                            </li>
-                            <li>
-                                the prettified code
-                            </li>
+                            <li>the code with preserved formatting</li>
+                            <li>a machine-friendly model of the code (recursive array of objects)</li>
+                            <li>the prettified code</li>
                         </ul>
                     </ul>
                 </div>
 
                 <div className={clsx(classes.example1, classes.container)}>
-                    <Typography variant='h4' gutterBottom>Example: Output formats</Typography>
-                    Change the code in the  StyleEditor to compare the different outputs received by
+                    <Typography variant="h4" gutterBottom>
+                        Example: Output formats
+                    </Typography>
+                    Change the code in the StyleEditor to compare the different outputs received by
                     <code>onChange</code>.
-                    <br/>
+                    <br />
                     The original input was <code>{COMPARISON_SAMPLE}</code>.
                     <table className={classes.table}>
                         <thead>
                             <tr>
                                 <th>StyleEditor</th>
-                                <th>Format <code>preserved</code></th>
-                                <th>Format <code>machine</code></th>
-                                <th>Format <code>pretty</code></th>
+                                <th>
+                                    Format <code>preserved</code>
+                                </th>
+                                <th>
+                                    Format <code>machine</code>
+                                </th>
+                                <th>
+                                    Format <code>pretty</code>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -255,7 +235,7 @@ class App extends React.PureComponent {
                                         className={classes.comparisonStyleEditor}
                                         defaultValue={COMPARISON_SAMPLE}
                                         onChange={this.onComparisonStyleEditorChange}
-                                        outputFormats='preserved,machine,pretty'
+                                        outputFormats="preserved,machine,pretty"
                                     />
                                 </td>
                                 <td>
@@ -284,9 +264,10 @@ class App extends React.PureComponent {
                     </table>
                 </div>
 
-
                 <div className={clsx(classes.exampleSurgery, classes.container)}>
-                    <Typography variant='h4' gutterBottom>Example: Surgery of minified code</Typography>
+                    <Typography variant="h4" gutterBottom>
+                        Example: Surgery of minified code
+                    </Typography>
                     Change anything in either of the two sides (they are synchronized):
                     <table className={classes.table}>
                         <thead>
@@ -303,29 +284,28 @@ class App extends React.PureComponent {
                                         value={surgery}
                                         onChange={this.onSurgeryTextareaChange}
                                     />
-                                    </td>
+                                </td>
                                 <td>
                                     <StyleEditor
                                         className={classes.surgeryStyleEditor}
                                         value={surgery}
                                         onChange={this.onSurgeryStyleEditorChange}
-                                        outputFormats='preserved'
+                                        outputFormats="preserved"
                                     />
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-
-
                 </div>
 
                 <div className={classes.container}>
-                    <Typography variant='h4' gutterBottom>Documentation</Typography>
-                    The API is described in the <a href='https://github.com/Aurelain/react-style-editor'>repository</a>.
+                    <Typography variant="h4" gutterBottom>
+                        Documentation
+                    </Typography>
+                    The API is described in the <a href="https://github.com/Aurelain/react-style-editor">repository</a>.
                 </div>
-
             </div>
-        )
+        );
     }
 
     /**
@@ -335,7 +315,7 @@ class App extends React.PureComponent {
         this.setState({
             main: '',
             mainCount: this.state.mainCount + 1,
-        })
+        });
     };
 
     /**
@@ -346,7 +326,7 @@ class App extends React.PureComponent {
             isLarge: true,
             main: LARGE_SAMPLE,
             mainCount: this.state.mainCount + 1,
-        })
+        });
     };
 
     /**
@@ -366,18 +346,18 @@ class App extends React.PureComponent {
     onSurgeryTextareaChange = (event) => {
         this.setState({
             surgery: event.currentTarget.value,
-        })
+        });
     };
 
     /**
      *
      */
     onSurgeryStyleEditorChange = (payload) => {
+        console.log('payload:', payload);
         this.setState({
             surgery: payload,
-        })
+        });
     };
-
 }
 
 export default withStyles(styles)(App);

@@ -4,7 +4,6 @@ Adds an unique identifier to each node (`id`).
 
 import {ATRULE, COMMENT, DECLARATION, RULE} from './COMMON.js';
 
-
 /**
  *
  */
@@ -14,21 +13,20 @@ const identify = (list, usedIds = {}) => {
         switch (item.type) {
             case ATRULE:
             case RULE:
-                id = item.selector.trim() +
-                    (item.hasBraceBegin? '{' : '') +
-                    (item.hasSemicolon? ';' : '');
+                id = item.selector.trim() + (item.hasBraceBegin ? '{' : '') + (item.hasSemicolon ? ';' : '');
                 break;
             case DECLARATION:
-                id = item.property.trim() +
-                    (item.hasColon? ':' : '') +
+                id =
+                    item.property.trim() +
+                    (item.hasColon ? ':' : '') +
                     item.value.trim() +
-                    (item.hasSemicolon? ';' : '');
+                    (item.hasSemicolon ? ';' : '');
                 break;
             case COMMENT:
                 id = '/*' + item.content + '*/';
                 break;
             default:
-                // nothing
+            // nothing
         }
         if (id in usedIds) {
             usedIds[id]++;

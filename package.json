@@ -35,6 +35,7 @@
         "@babel/preset-react": "^7.0.0",
         "@storybook/react": "^5.0.11",
         "babel-loader": "^8.0.5",
+        "prettier": "^2.4.1",
         "react": "^16.8.6",
         "react-dom": "^16.8.6"
     },
@@ -51,7 +52,12 @@
             "@babel/plugin-proposal-class-properties"
         ]
     },
-    "browserslist": "ie 11",
+    "prettier": {
+        "tabWidth": 4,
+        "singleQuote": true,
+        "printWidth": 120,
+        "bracketSpacing": false
+    },
     "bugs": {
         "url": "https://github.com/Aurelain/react-style-editor/issues"
     },

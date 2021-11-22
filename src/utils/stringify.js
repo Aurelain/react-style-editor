@@ -19,32 +19,19 @@ const flatten = (kids, accumulator = []) => {
         switch (item.type) {
             case ATRULE:
             case RULE:
-                accumulator.push(
-                    item.selector +
-                    (item.hasBraceBegin? '{' : '')
-                );
+                accumulator.push(item.selector + (item.hasBraceBegin ? '{' : ''));
                 if (item.kids && item.kids.length) {
                     flatten(item.kids, accumulator);
                 }
-                accumulator.push(
-                    (item.hasBraceEnd? '}' : '') +
-                    (item.hasSemicolon? ';' : '')
-                );
+                accumulator.push((item.hasBraceEnd ? '}' : '') + (item.hasSemicolon ? ';' : ''));
                 break;
             case DECLARATION:
                 accumulator.push(
-                    item.property +
-                    (item.hasColon? ':' : '') +
-                    item.value +
-                    (item.hasSemicolon? ';' : '')
+                    item.property + (item.hasColon ? ':' : '') + item.value + (item.hasSemicolon ? ';' : '')
                 );
                 break;
             case COMMENT:
-                accumulator.push(
-                    item.prefix + '/*' +
-                    item.content +
-                    (item.hasSlashEnd? '*/' : '')
-                );
+                accumulator.push(item.prefix + '/*' + item.content + (item.hasSlashEnd ? '*/' : ''));
                 break;
             default:
             // nothing
@@ -52,6 +39,5 @@ const flatten = (kids, accumulator = []) => {
     }
     return accumulator;
 };
-
 
 export default stringify;

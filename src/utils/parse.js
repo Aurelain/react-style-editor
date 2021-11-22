@@ -14,9 +14,9 @@ const PARENTHESIS = 'parenthesis';
 const SPECIAL_ATRULES = ['@page', '@font-face', '@viewport'];
 
 // Global variables (to avoid passing them back and forth):
-let info;           // state information. Mostly flags that track delimiters.
-let model;          // the current model
-let ancestors;      // the list of parents of the current model
+let info; // state information. Mostly flags that track delimiters.
+let model; // the current model
+let ancestors; // the list of parents of the current model
 
 /**
  *
@@ -34,11 +34,11 @@ const parse = (blob) => {
     ancestors = [];
 
     // The whole stylesheet simulates the ruleset block of a dummy ATRULE:
-    const root = model = {
+    const root = (model = {
         type: ATRULE,
-        hasBraceBegin: true,    // the stylesheet started without any `{` because this is a simulated ATRULE
-        kids: [],           // these kids will be the output of `parse()`
-    };
+        hasBraceBegin: true, // the stylesheet started without any `{` because this is a simulated ATRULE
+        kids: [], // these kids will be the output of `parse()`
+    });
 
     // Local variables:
     let len = blob.length;
@@ -55,12 +55,14 @@ const parse = (blob) => {
                 } else {
                     switch (model.type) {
                         case ATRULE:
-                            if (model.hasBraceBegin) { // we're inside the ATRULE's body
+                            if (model.hasBraceBegin) {
+                                // we're inside the ATRULE's body
                                 addRule(); // model is now a RULE
                                 model.selector = chunk;
                                 model.hasBraceBegin = true;
                                 chunk = '';
-                            } else { // we're inside the ATRULE's selector
+                            } else {
+                                // we're inside the ATRULE's selector
                                 model.selector = chunk;
                                 model.hasBraceBegin = true;
                                 chunk = '';
@@ -68,11 +70,13 @@ const parse = (blob) => {
                             }
                             break;
                         case RULE:
-                            if (model.hasBraceBegin) { // we're inside the RULE's body
+                            if (model.hasBraceBegin) {
+                                // we're inside the RULE's body
                                 addDeclaration(); // although this is an invalid declaration, we still add it
                                 chunk += c;
                                 addFence(BRACES);
-                            } else { // we're inside the RULE's selector
+                            } else {
+                                // we're inside the RULE's selector
                                 model.selector = chunk;
                                 model.hasBraceBegin = true;
                                 chunk = '';
@@ -82,7 +86,8 @@ const parse = (blob) => {
                             addFence(BRACES);
                             chunk += c;
                             break;
-                        default: // COMMENT
+                        default:
+                            // COMMENT
                             chunk += c;
                     }
                 }
@@ -95,11 +100,14 @@ const parse = (blob) => {
                 } else {
                     switch (model.type) {
                         case ATRULE:
-                            if (model === root) { // the root is special because it cannot be closed with a brace
+                            if (model === root) {
+                                // the root is special because it cannot be closed with a brace
                                 addRule(); // yes, although this is an ending, we're actually beginning a new RULE
                                 chunk += c; // the selector will contain this ending brace
-                            } else { // normal ATRULE
-                                if (model.hasBraceBegin) { // root
+                            } else {
+                                // normal ATRULE
+                                if (model.hasBraceBegin) {
+                                    // root
                                     if (chunk) {
                                         addRule();
                                         model.selector = chunk;
@@ -108,14 +116,16 @@ const parse = (blob) => {
                                     model.hasBraceEnd = true;
                                     goBack();
                                     chunk = '';
-                                } else { // we're still inside the atrule's selector
+                                } else {
+                                    // we're still inside the atrule's selector
                                     removeFence(BRACES);
                                     chunk += c;
                                 }
                             }
                             break;
                         case RULE:
-                            if (model.hasBraceBegin) { // inside the rule's block. About to get closed.
+                            if (model.hasBraceBegin) {
+                                // inside the rule's block. About to get closed.
                                 if (chunk) {
                                     addDeclaration();
                                     model.property = chunk;
@@ -124,7 +134,8 @@ const parse = (blob) => {
                                 model.hasBraceEnd = true;
                                 goBack();
                                 chunk = '';
-                            } else { // inside the rule's selector
+                            } else {
+                                // inside the rule's selector
                                 removeFence(BRACES);
                                 chunk += c;
                             }
@@ -140,7 +151,8 @@ const parse = (blob) => {
                             goBack();
                             chunk = '';
                             break;
-                        default: // DECLARATION, COMMENT
+                        default:
+                            // DECLARATION, COMMENT
                             chunk += c;
                     }
                 }
@@ -172,23 +184,29 @@ const parse = (blob) => {
 
             case "'": // -------------------- S I N G L E   Q U O T E S ------------------------------------------------
                 chunk += c; // we're accepting this character no matter what
-                if (!info.comment && !info.doubleQuotes) { // single quotes are allowed
-                    if (!info.singleQuotes) { // this is an opening
+                if (!info.comment && !info.doubleQuotes) {
+                    // single quotes are allowed
+                    if (!info.singleQuotes) {
+                        // this is an opening
                         handleNormalCharacter(); // maybe this character creates a new model
                         info.singleQuotes = true; // must be after any potential new model because of `resetInfo`
-                    } else { // this is a closure
+                    } else {
+                        // this is a closure
                         info.singleQuotes = false;
                     }
                 }
                 break;
 
-            case '"':// -------------------- D O U B L E   Q U O T E S -------------------------------------------------
+            case '"': // -------------------- D O U B L E   Q U O T E S -------------------------------------------------
                 chunk += c; // we're accepting this character no matter what
-                if (!info.comment && !info.singleQuotes) { // double quotes are allowed
-                    if (!info.doubleQuotes) { // this is an opening
+                if (!info.comment && !info.singleQuotes) {
+                    // double quotes are allowed
+                    if (!info.doubleQuotes) {
+                        // this is an opening
                         handleNormalCharacter(); // maybe this character creates a new model
                         info.doubleQuotes = true; // must be after any potential new model because of `resetInfo`
-                    } else { // this is a closure
+                    } else {
+                        // this is a closure
                         info.doubleQuotes = false;
                     }
                 }
@@ -200,22 +218,27 @@ const parse = (blob) => {
                 } else {
                     switch (model.type) {
                         case ATRULE:
-                            if (model.hasBraceBegin) { // inside the atrule's block
+                            if (model.hasBraceBegin) {
+                                // inside the atrule's block
                                 addAtrule();
                                 chunk += c;
-                            } else { // inside the atrule's selector
+                            } else {
+                                // inside the atrule's selector
                                 chunk += c;
                             }
                             break;
                         case RULE:
-                            if (model.hasBraceBegin) { // inside the rule's block
+                            if (model.hasBraceBegin) {
+                                // inside the rule's block
                                 addDeclaration();
                                 chunk += c;
-                            } else { // inside the rule's selector
+                            } else {
+                                // inside the rule's selector
                                 chunk += c;
                             }
                             break;
-                        default: // DECLARATION, COMMENT
+                        default:
+                            // DECLARATION, COMMENT
                             chunk += c;
                     }
                 }
@@ -230,7 +253,8 @@ const parse = (blob) => {
                             if (model.hasBraceBegin) {
                                 addRule();
                                 chunk += c;
-                            } else { // we're still inside the atrule's selector
+                            } else {
+                                // we're still inside the atrule's selector
                                 model.selector = chunk;
                                 model.hasSemicolon = true; // the current ATRULE has ended
                                 goBack();
@@ -244,7 +268,8 @@ const parse = (blob) => {
                                 model.hasSemicolon = true; // the newly created DECLARATION has ended
                                 goBack(); // model is again a RULE
                                 chunk = '';
-                            } else { // we're still inside the rule's selector
+                            } else {
+                                // we're still inside the rule's selector
                                 chunk += c;
                             }
                             break;
@@ -258,7 +283,8 @@ const parse = (blob) => {
                             goBack();
                             chunk = '';
                             break;
-                        default: // COMMENT
+                        default:
+                            // COMMENT
                             chunk += c;
                     }
                 }
@@ -281,7 +307,8 @@ const parse = (blob) => {
                                 model.property = chunk;
                                 model.hasColon = true;
                                 chunk = '';
-                            } else { // we're still inside the rule's selector
+                            } else {
+                                // we're still inside the rule's selector
                                 chunk += c;
                             }
                             break;
@@ -294,7 +321,8 @@ const parse = (blob) => {
                                 model.hasColon = true;
                             }
                             break;
-                        default: // COMMENT
+                        default:
+                            // COMMENT
                             chunk += c;
                     }
                 }
@@ -314,26 +342,33 @@ const parse = (blob) => {
                 break;
 
             case '/': // -------------------- S L A S H ----------------------------------------------------------------
-                if (info.singleQuotes || info.doubleQuotes) { // cannot comment inside quotes
+                if (info.singleQuotes || info.doubleQuotes) {
+                    // cannot comment inside quotes
                     chunk += c;
                     handleNormalCharacter();
-                } else if (!info.comment && blob.charAt(i + 1) === '*') { // a comment starts
+                } else if (!info.comment && blob.charAt(i + 1) === '*') {
+                    // a comment starts
                     i++; // jump over the next star character
-                    if (model.hasBraceBegin) { // we're inside ATRULE/RULE, so this is a block comment
+                    if (model.hasBraceBegin) {
+                        // we're inside ATRULE/RULE, so this is a block comment
                         addComment();
                         model.prefix = chunk;
                         chunk = '';
-                    } else { // inline comment
+                    } else {
+                        // inline comment
                         chunk += '/*';
                     }
                     info.comment = true;
-                } else if (info.comment && blob.charAt(i - 1) === '*') { // a comment ends
-                    if (model.type === COMMENT) { // block comment is ending
+                } else if (info.comment && blob.charAt(i - 1) === '*') {
+                    // a comment ends
+                    if (model.type === COMMENT) {
+                        // block comment is ending
                         model.content = chunk.slice(0, -1); // remove the already added star
                         model.hasSlashEnd = true;
                         goBack();
                         chunk = '';
-                    } else { // inline comment is ending
+                    } else {
+                        // inline comment is ending
                         chunk += c;
                         info.comment = false;
                     }
@@ -343,7 +378,8 @@ const parse = (blob) => {
                 }
                 break;
 
-            default: // -------------------- N O R M A L   C H A R A C T E R -------------------------------------------
+            default:
+                // -------------------- N O R M A L   C H A R A C T E R -------------------------------------------
                 chunk += c;
                 handleNormalCharacter();
         }
@@ -384,7 +420,6 @@ const parse = (blob) => {
     }
     return root.kids;
 };
-
 
 /**
  *
@@ -469,7 +504,6 @@ const attemptConversionToRule = () => {
     }
 };
 
-
 /**
  *
  */
@@ -479,7 +513,6 @@ const resetInfo = () => {
     info.comment = false;
     info.fences = [];
 };
-
 
 /**
  *
@@ -505,7 +538,6 @@ const removeFence = (fenceType) => {
         info.fences.pop();
     }
 };
-
 
 /**
  *

@@ -39,31 +39,27 @@ const flatten = (kids, accumulator = []) => {
         switch (item.type) {
             case ATRULE:
             case RULE:
-                accumulator.push(
-                    handleInlineComments(item.selector) +
-                    (item.hasBraceBegin? '{' : '')
-                );
+                accumulator.push(handleInlineComments(item.selector) + (item.hasBraceBegin ? '{' : ''));
                 if (item.kids && item.kids.length) {
                     flatten(item.kids, accumulator);
                 }
-                accumulator.push(
-                    (item.hasBraceEnd? '}' : '') +
-                    (item.hasSemicolon? ';' : '')
-                );
+                accumulator.push((item.hasBraceEnd ? '}' : '') + (item.hasSemicolon ? ';' : ''));
                 break;
             case DECLARATION:
                 accumulator.push(
                     handleInlineComments(item.property) +
-                    (item.hasColon? ':' : '') +
-                    handleInlineComments(item.value) +
-                    (item.hasSemicolon? ';' : '')
+                        (item.hasColon ? ':' : '') +
+                        handleInlineComments(item.value) +
+                        (item.hasSemicolon ? ';' : '')
                 );
                 break;
             case COMMENT:
                 accumulator.push(
-                    item.prefix + SLASH_SUBSTITUTE + '*' +
-                    item.content +
-                    (item.hasSlashEnd? ('*' + SLASH_SUBSTITUTE) : '')
+                    item.prefix +
+                        SLASH_SUBSTITUTE +
+                        '*' +
+                        item.content +
+                        (item.hasSlashEnd ? '*' + SLASH_SUBSTITUTE : '')
                 );
                 break;
             default:
@@ -77,7 +73,11 @@ const flatten = (kids, accumulator = []) => {
  *
  */
 const handleInlineComments = (blob) => {
-    return blob.split('/*').join(SLASH_SUBSTITUTE + '*').split('*/').join('*' + SLASH_SUBSTITUTE);
+    return blob
+        .split('/*')
+        .join(SLASH_SUBSTITUTE + '*')
+        .split('*/')
+        .join('*' + SLASH_SUBSTITUTE);
 };
 
 export default ignore;

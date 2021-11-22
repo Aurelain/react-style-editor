@@ -51,7 +51,6 @@ const classes = stylize('Declaration', {
 //  C O M P O N E N T
 // =====================================================================================================================
 class Declaration extends React.PureComponent {
-
     state = {
         isEditingProperty: false,
         isEditingValue: false,
@@ -72,56 +71,40 @@ class Declaration extends React.PureComponent {
         const cleanValue = clean(value);
 
         return (
-            <div
-                className={cls(classes.root, !isValid && classes.isInvalid)}
-                onClick={this.onDeclarationClick}
-            >
+            <div className={cls(classes.root, !isValid && classes.isInvalid)} onClick={this.onDeclarationClick}>
+                <Checkbox id={id} tick={1} onTick={onTick} />
 
-                <Checkbox id={id} tick={1} onTick={onTick}/>
-
-                {
-                    isEditingProperty ?
-
-                        this.renderArea('property', property) :
-
-                        <span
-                            className={cls(classes.property, !cleanProperty && classes.isEmpty)}
-                            onClick={this.onPropertyClick}
-                        >
-                            {cleanProperty}
-                        </span>
-                }
+                {isEditingProperty ? (
+                    this.renderArea('property', property)
+                ) : (
+                    <span
+                        className={cls(classes.property, !cleanProperty && classes.isEmpty)}
+                        onClick={this.onPropertyClick}
+                    >
+                        {cleanProperty}
+                    </span>
+                )}
 
                 {': '}
 
-                {
-                    isEditingValue ?
-
-                        this.renderArea('value', value) :
-
-                        <span
-                            className={cls(classes.value, !cleanValue && classes.isEmpty)}
-                            onClick={this.onValueClick}
-                        >
-                            {cleanValue}
-                        </span>
-                }
+                {isEditingValue ? (
+                    this.renderArea('value', value)
+                ) : (
+                    <span className={cls(classes.value, !cleanValue && classes.isEmpty)} onClick={this.onValueClick}>
+                        {cleanValue}
+                    </span>
+                )}
 
                 {';'}
 
-                {
-                    !isValid &&
-                    <Alert/>
-                }
+                {!isValid && <Alert />}
 
-                {
-                    isEditingAfter &&
+                {isEditingAfter && (
                     <div className={classes.after}>
-                        <Checkbox tick={1}/>
+                        <Checkbox tick={1} />
                         {this.renderArea(AFTER, '')}
                     </div>
-                }
-
+                )}
             </div>
         );
     }
@@ -139,7 +122,7 @@ class Declaration extends React.PureComponent {
                 onChange={onEditChange}
                 onBlur={this.onAreaBlur}
             />
-        )
+        );
     };
 
     /**
@@ -180,7 +163,6 @@ class Declaration extends React.PureComponent {
         });
         this.props.onEditEnd(id, payload);
     };
-
 }
 
 // =====================================================================================================================
