@@ -4,6 +4,8 @@
 import {ATRULE, COMMENT} from './COMMON';
 
 let sheet;
+const BASE64_TEMP = ';base64,0';
+const base64Pattern = /;base64,[a-zA-Z/0-9+=]*/g;
 
 /**
  *
@@ -22,7 +24,8 @@ const validateRules = (list, parentPrefix, parentSuffix, parentFingerprint) => {
         if (rule.type === COMMENT) {
             continue;
         }
-        const rulePrefix = parentPrefix + rule.selector + (rule.hasBraceBegin ? '{' : '');
+        const adaptedSelector = rule.selector.split('&').join('#x'); // act as if `&` is valid
+        const rulePrefix = parentPrefix + adaptedSelector + (rule.hasBraceBegin ? '{' : '');
         const ruleSuffix = (rule.hasBraceEnd ? '}' : '') + (rule.hasSemicolon ? ';' : '') + parentSuffix;
         const fingerprint = inAndOut(rulePrefix + ruleSuffix);
         if (fingerprint !== parentFingerprint) {
@@ -58,7 +61,8 @@ const validateDeclarations = (list, parentPrefix, parentSuffix, parentFingerprin
             continue;
         }
         block = (declaration.hasSemicolon ? ';' : '') + block;
-        block = declaration.property + (declaration.hasColon ? ':' : '') + declaration.value + block;
+        const safeDeclarationValue = declaration.value.replace(base64Pattern, BASE64_TEMP);
+        block = declaration.property + (declaration.hasColon ? ':' : '') + safeDeclarationValue + block;
         const freshFingerprint = inAndOut(parentPrefix + block + parentSuffix);
         if (fingerprint !== freshFingerprint) {
             // the browser accepted our declaration
@@ -110,9 +114,10 @@ const inAndOut = (blob) => {
  */
 const createPlayground = () => {
     const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
     document.head.appendChild(iframe);
     const iframeDocument = iframe.contentWindow.document;
-    document.head.removeChild(iframe);
+    // document.head.removeChild(iframe); // TODO: investigate why Chrome 8X breaks if we remove the iframe
     const style = iframeDocument.createElement('style');
     iframeDocument.head.appendChild(style);
     return style.sheet;

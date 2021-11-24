@@ -5,6 +5,7 @@ import clean from '../utils/clean';
 import Checkbox from './Checkbox';
 import Area from './Area';
 import {AFTER} from '../utils/COMMON';
+import shorten from '../utils/shorten';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -29,6 +30,9 @@ const classes = stylize('Comment', {
     },
 });
 
+const MAX_CHARS_VALUE = 32; // how many characters to display in the value. Protects against giant base64.
+const MAX_CHARS_TITLE = 512; // how many characters to display in the tooltip. Protects against giant base64.
+
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -46,6 +50,14 @@ class Comment extends React.PureComponent {
         const {isEditingContent, isEditingAfter} = this.state;
 
         const isLegit = !!content.match(/^\s*[-a-zA-Z0-9_]*\s*:|[{}()*@;/\]]/);
+        const cleanContent = clean(content);
+
+        let shortContent = cleanContent;
+        let shortTitle = '';
+        if (cleanContent.length > MAX_CHARS_VALUE) {
+            shortContent = shorten(cleanContent, MAX_CHARS_VALUE);
+            shortTitle = shorten(cleanContent, MAX_CHARS_TITLE);
+        }
 
         return (
             <div className={classes.root} onClick={this.onCommentClick}>
@@ -54,8 +66,8 @@ class Comment extends React.PureComponent {
                 {isEditingContent ? (
                     this.renderArea('content', content)
                 ) : (
-                    <span className={classes.content} title={content} onClick={this.onContentClick}>
-                        {'/*' + clean(content) + '*/'}
+                    <span className={classes.content} title={shortTitle} onClick={this.onContentClick}>
+                        {'/*' + shortContent + '*/'}
                     </span>
                 )}
                 {isEditingAfter && (
@@ -67,6 +79,7 @@ class Comment extends React.PureComponent {
             </div>
         );
     }
+
     /**
      *
      */

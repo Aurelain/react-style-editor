@@ -4,13 +4,13 @@ import Rule from './Rule';
 import Area from './Area';
 import {AFTER, AFTER_BEGIN, ATRULE, BEFORE, COMMENT, DECLARATION, RULE} from '../utils/COMMON';
 import stylize, {prepareStyling, releaseStyling} from '../utils/stylize';
+import analyze from '../utils/analyze';
 import modify from '../utils/modify';
 import stringify from '../utils/stringify';
 import prettify from '../utils/prettify';
 import ignore from '../utils/ignore';
 import unignore from '../utils/unignore';
 import cls from '../utils/cls';
-import analyze from '../utils/analyze';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -123,9 +123,9 @@ class StyleEditor extends React.Component {
     /**
      *
      */
-    componentDidMount() {
-        this.announceOnChange(this.currentRules);
-    }
+    // componentDidMount() {
+    //     this.announceOnChange(this.currentRules);
+    // }
 
     /**
      * Under no circumstances do we allow updates while an edit is on-going.
@@ -339,7 +339,11 @@ const checkIsControlled = (props) => {
  *
  */
 const computeBlobFromPayload = (rules, id, payload) => {
-    const {freshRules, freshNode, parentNode} = modify(rules, id, payload);
+    // Without deep-cloning, writing inside #foo{} produces: #foo{c;} #foo{co;c;} #foo{col;co;c;} etc.
+    // TODO: find a better way
+    const rulesDeepClone = JSON.parse(JSON.stringify(rules));
+
+    const {freshRules, freshNode, parentNode} = modify(rulesDeepClone, id, payload);
     if (payload[AFTER_BEGIN]) {
         // can only be dispatched by AT/RULE
         const node = createTemporaryDeclaration(payload[AFTER_BEGIN]);

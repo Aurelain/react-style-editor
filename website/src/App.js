@@ -1,6 +1,6 @@
 import React from 'react';
-import StyleEditor from 'react-style-editor';
-// import StyleEditor from './tmp/components/StyleEditor';
+// import StyleEditor from 'react-style-editor';
+import StyleEditor from './tmp/components/StyleEditor';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import {withStyles} from '@material-ui/styles';
@@ -77,6 +77,9 @@ const styles = {
         wordBreak: 'break-all',
         border: 'none',
         resize: 'none',
+        '&:focus-visible': {
+            outlineWidth: 0,
+        },
     },
     table: {
         marginTop: 16,
@@ -141,6 +144,7 @@ class App extends React.PureComponent {
         comparisonPretty: '',
         surgery: SURGERY_SAMPLE,
     };
+    comparisonRef = React.createRef();
 
     render() {
         const {classes} = this.props;
@@ -232,6 +236,7 @@ class App extends React.PureComponent {
                             <tr>
                                 <td>
                                     <StyleEditor
+                                        ref={this.comparisonRef}
                                         className={classes.comparisonStyleEditor}
                                         defaultValue={COMPARISON_SAMPLE}
                                         onChange={this.onComparisonStyleEditorChange}
@@ -306,6 +311,11 @@ class App extends React.PureComponent {
                 </div>
             </div>
         );
+    }
+
+    componentDidMount() {
+        // The following is a hack that accesses private a private function inside StyleEditor. TODO: Find another way.
+        this.comparisonRef.current.announceOnChange(COMPARISON_SAMPLE);
     }
 
     /**

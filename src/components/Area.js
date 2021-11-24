@@ -12,10 +12,10 @@ const classes = stylize('Area', {
         resize: 'none',
         verticalAlign: 'middle',
         overflow: 'hidden',
-        padding: '0',
+        padding: 2,
         border: 'none',
         outline: 'solid 1px #ccc',
-        outlineOffset: '1px',
+        outlineOffset: '-1px',
         minWidth: 4,
         textDecoration: 'none', // to combat `isInvalid` from upstream
         pointerEvents: 'auto !important', // to combat the general lock imposed by StyleEditor
@@ -62,15 +62,22 @@ class Area extends React.PureComponent {
         textarea.style.width = '0';
         textarea.style.height = '0';
         const w = textarea.scrollWidth;
-        if (w > textarea.parentNode.offsetWidth - 40) {
+
+        const previousElement = textarea.previousElementSibling;
+        let offset = 0;
+        if (previousElement) {
+            offset = previousElement.offsetLeft + previousElement.offsetWidth;
+        }
+
+        if (offset + w > textarea.parentNode.offsetWidth) {
             textarea.style.whiteSpace = 'normal';
             textarea.style.display = 'block';
             textarea.style.width = '100%';
         } else {
             textarea.style.display = 'inline-block';
-            textarea.style.width = textarea.scrollWidth + 'px';
+            textarea.style.width = textarea.scrollWidth + 2 + 'px';
         }
-        textarea.style.height = textarea.scrollHeight + 1 + 'px';
+        textarea.style.height = textarea.scrollHeight + 'px';
     };
 
     /**

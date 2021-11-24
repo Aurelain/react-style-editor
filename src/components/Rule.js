@@ -30,6 +30,7 @@ const classes = stylize('Rule', {
     },
     block: {
         marginLeft: 16,
+        whiteSpace: 'nowrap',
     },
     blockIsTop: {
         marginLeft: 4,

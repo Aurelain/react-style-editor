@@ -3,6 +3,7 @@ import React from 'react';
 import cls from '../utils/cls';
 import stylize from '../utils/stylize';
 import clean from '../utils/clean';
+import shorten from '../utils/shorten';
 import Checkbox from './Checkbox';
 import Area from './Area';
 import {AFTER} from '../utils/COMMON';
@@ -14,6 +15,9 @@ import Alert from './Alert';
 const classes = stylize('Declaration', {
     root: {
         padding: '2px 0',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
     },
     property: {
         color: 'rgb(0, 116, 232)', // Firefox
@@ -47,6 +51,9 @@ const classes = stylize('Declaration', {
     },
 });
 
+const MAX_CHARS_VALUE = 32; // how many characters to display in the value. Protects against giant base64.
+const MAX_CHARS_TITLE = 512; // how many characters to display in the tooltip. Protects against giant base64.
+
 // =====================================================================================================================
 //  C O M P O N E N T
 // =====================================================================================================================
@@ -70,6 +77,13 @@ class Declaration extends React.PureComponent {
         const cleanProperty = clean(property);
         const cleanValue = clean(value);
 
+        let shortValue = cleanValue;
+        let shortTitle = '';
+        if (cleanValue.length > MAX_CHARS_VALUE) {
+            shortValue = shorten(cleanValue, MAX_CHARS_VALUE);
+            shortTitle = shorten(cleanValue, MAX_CHARS_TITLE);
+        }
+
         return (
             <div className={cls(classes.root, !isValid && classes.isInvalid)} onClick={this.onDeclarationClick}>
                 <Checkbox id={id} tick={1} onTick={onTick} />
@@ -90,8 +104,12 @@ class Declaration extends React.PureComponent {
                 {isEditingValue ? (
                     this.renderArea('value', value)
                 ) : (
-                    <span className={cls(classes.value, !cleanValue && classes.isEmpty)} onClick={this.onValueClick}>
-                        {cleanValue}
+                    <span
+                        className={cls(classes.value, !cleanValue && classes.isEmpty)}
+                        onClick={this.onValueClick}
+                        title={shortTitle}
+                    >
+                        {shortValue}
                     </span>
                 )}
 

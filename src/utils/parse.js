@@ -13,10 +13,15 @@ const PARENTHESIS = 'parenthesis';
 // the following 3 at-rules from ATRULE to RULE:
 const SPECIAL_ATRULES = ['@page', '@font-face', '@viewport'];
 
+// Constants used for the base64 replacements.
+const BASE64 = ';base64,';
+const BASE64_TEMP = BASE64 + '0';
+
 // Global variables (to avoid passing them back and forth):
 let info; // state information. Mostly flags that track delimiters.
 let model; // the current model
 let ancestors; // the list of parents of the current model
+let declarations; // the list of all declarations, to help base64 replacements
 
 /**
  *
@@ -26,12 +31,11 @@ const parse = (blob) => {
         return [];
     }
 
-    // Initialize the info:
+    // Initialize global variables:
     info = {};
     resetInfo();
-
-    // Initialize the ancestors:
     ancestors = [];
+    declarations = [];
 
     // The whole stylesheet simulates the ruleset block of a dummy ATRULE:
     const root = (model = {
@@ -43,6 +47,7 @@ const parse = (blob) => {
     // Local variables:
     let len = blob.length;
     let chunk = '';
+    const hiddenBase64 = [];
 
     // The GIANT loop:
     for (let i = 0; i < len; i++) {
@@ -246,7 +251,18 @@ const parse = (blob) => {
 
             case ';': // -------------------- S E M I C O L O N --------------------------------------------------------
                 if (isTokenPrevented()) {
-                    chunk += c;
+                    if (blob.substr(i, 8) === BASE64) {
+                        let base64EndingIndex = blob.indexOf(')', i + 8) - 1;
+                        const base64EndingChar = blob.charAt(base64EndingIndex);
+                        if (base64EndingChar === '"' || base64EndingChar === "'") {
+                            base64EndingIndex--;
+                        }
+                        hiddenBase64.push(blob.substring(i, base64EndingIndex + 1));
+                        i += base64EndingIndex - i;
+                        chunk += BASE64_TEMP;
+                    } else {
+                        chunk += c;
+                    }
                 } else {
                     switch (model.type) {
                         case ATRULE:
@@ -418,6 +434,18 @@ const parse = (blob) => {
             // nothing
         }
     }
+
+    // Restore base64
+    if (hiddenBase64.length) {
+        restoreBase64(root.kids, hiddenBase64);
+    }
+
+    // Release global variables
+    info = null;
+    model = null;
+    ancestors = null;
+    declarations = null;
+
     return root.kids;
 };
 
@@ -462,13 +490,15 @@ const addRule = () => {
  *
  */
 const addDeclaration = () => {
-    add({
+    const declaration = {
         type: DECLARATION,
         property: '',
         hasColon: false,
         value: '',
         hasSemicolon: false,
-    });
+    };
+    declarations.push(declaration);
+    add(declaration);
 };
 
 /**
@@ -548,6 +578,30 @@ const handleNormalCharacter = () => {
             addDeclaration();
         } else if (model.type === ATRULE) {
             addRule();
+        }
+    }
+};
+
+/**
+ *
+ */
+const restoreBase64 = (list, hiddenBase64) => {
+    for (const item of list) {
+        switch (item.type) {
+            case ATRULE:
+            case RULE:
+                if (item.kids && item.kids.length && hiddenBase64.length) {
+                    restoreBase64(item.kids, hiddenBase64);
+                }
+                break;
+            case DECLARATION:
+                item.value = item.value.replace(BASE64_TEMP, () => hiddenBase64.shift());
+                break;
+            case COMMENT:
+                item.content = item.content.replace(BASE64_TEMP, () => hiddenBase64.shift());
+                break;
+            default:
+            // nothing
         }
     }
 };

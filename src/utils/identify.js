@@ -4,6 +4,8 @@ Adds an unique identifier to each node (`id`).
 
 import {ATRULE, COMMENT, DECLARATION, RULE} from './COMMON.js';
 
+const MAX_CHARS = 32; // how many characters to use as identifier. Protects against giant base64.
+
 /**
  *
  */
@@ -19,11 +21,11 @@ const identify = (list, usedIds = {}) => {
                 id =
                     item.property.trim() +
                     (item.hasColon ? ':' : '') +
-                    item.value.trim() +
+                    item.value.substr(0, MAX_CHARS) +
                     (item.hasSemicolon ? ';' : '');
                 break;
             case COMMENT:
-                id = '/*' + item.content + '*/';
+                id = '/*' + item.content.substr(0, MAX_CHARS) + '*/';
                 break;
             default:
             // nothing
