@@ -8,6 +8,7 @@ import Checkbox from './Checkbox';
 import Area from './Area';
 import {AFTER} from '../utils/COMMON';
 import Alert from './Alert';
+import hasSelection from '../utils/hasSelection';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -147,6 +148,7 @@ class Declaration extends React.PureComponent {
      *
      */
     onDeclarationClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingAfter: true});
         this.props.onEditBegin();
@@ -156,6 +158,7 @@ class Declaration extends React.PureComponent {
      *
      */
     onPropertyClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingProperty: true});
         this.props.onEditBegin();
@@ -165,6 +168,7 @@ class Declaration extends React.PureComponent {
      *
      */
     onValueClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingValue: true});
         this.props.onEditBegin();

@@ -6,6 +6,7 @@ import Checkbox from './Checkbox';
 import Area from './Area';
 import {AFTER} from '../utils/COMMON';
 import shorten from '../utils/shorten';
+import hasSelection from '../utils/hasSelection';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -99,6 +100,7 @@ class Comment extends React.PureComponent {
      *
      */
     onContentClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingContent: true});
         this.props.onEditBegin();
@@ -108,6 +110,7 @@ class Comment extends React.PureComponent {
      *
      */
     onCommentClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingAfter: true});
         this.props.onEditBegin();

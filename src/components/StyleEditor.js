@@ -11,6 +11,7 @@ import prettify from '../utils/prettify';
 import ignore from '../utils/ignore';
 import unignore from '../utils/unignore';
 import cls from '../utils/cls';
+import hasSelection from '../utils/hasSelection';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -274,6 +275,7 @@ class StyleEditor extends React.Component {
      *
      */
     onClick = () => {
+        if (hasSelection()) return;
         this.setState({
             isEditing: true,
             hasArea: true,

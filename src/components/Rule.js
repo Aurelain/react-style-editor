@@ -9,6 +9,7 @@ import stylize from '../utils/stylize';
 import clean from '../utils/clean';
 import Area from './Area';
 import Alert from './Alert';
+import hasSelection from '../utils/hasSelection';
 
 // =====================================================================================================================
 //  D E C L A R A T I O N S
@@ -173,6 +174,7 @@ class Rule extends React.PureComponent {
      *
      */
     onSelectorClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingSelector: true});
         this.props.onEditBegin();
@@ -182,6 +184,7 @@ class Rule extends React.PureComponent {
      *
      */
     onBraceClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingBefore: true});
         this.props.onEditBegin();
@@ -191,6 +194,7 @@ class Rule extends React.PureComponent {
      *
      */
     onHeaderClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         if (this.props.hasBraceBegin) {
             this.setState({isEditingAfterBegin: true});
@@ -204,6 +208,7 @@ class Rule extends React.PureComponent {
      *
      */
     onFooterClick = (event) => {
+        if (hasSelection()) return;
         event.stopPropagation();
         this.setState({isEditingAfter: true});
         this.props.onEditBegin();
