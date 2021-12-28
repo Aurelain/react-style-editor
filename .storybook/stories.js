@@ -41,4 +41,14 @@ storiesOf('StyleEditor', module)
     .add('invalidRule', () => <StyleEditor defaultValue={`0div{mother:father;font-weight:bold}`} />)
     .add('overwrite declarations', () => <StyleEditor defaultValue={`div{background-color:red;background:blue;}`} />)
     .add('empty slots', () => <StyleEditor defaultValue={` {mother:;: bold}`} />)
-    .add('readOnly', () => <StyleEditor value={'div{color:red}'} readOnly />);
+    .add('readOnly', () => <StyleEditor value={'div{color:red}'} readOnly />)
+    .add('comments outside', () => (
+        <StyleEditor defaultValue={'/*x*/h1{color:red} h2/*x*/{color:red} h3{color:red}/*x*/'} />
+    ))
+    .add('comments inside', () => (
+        <StyleEditor
+            defaultValue={
+                'h1{/*x*/color:red} h2{c/*x*/olor:red} h3{color:/*x*/red} h4{color:red/*x*/} h5{color:red;/*x*/} h6{color:red;/*x*//*x*/} .empty{color:red;/**//**//**//**/}'
+            }
+        />
+    ));

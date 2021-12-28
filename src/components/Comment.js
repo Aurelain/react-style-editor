@@ -49,7 +49,6 @@ class Comment extends React.PureComponent {
         const {id, content, onTick} = this.props;
         const {isEditingContent, isEditingAfter} = this.state;
 
-        const isLegit = !!content.match(/^\s*[-a-zA-Z0-9_]*\s*:|[{}()*@;/\]]/);
         const cleanContent = clean(content);
 
         let shortContent = cleanContent;
@@ -61,7 +60,7 @@ class Comment extends React.PureComponent {
 
         return (
             <div className={classes.root} onClick={this.onCommentClick}>
-                {isLegit && <Checkbox id={id} tick={0} onTick={onTick} />}
+                <Checkbox id={id} tick={0} onTick={onTick} />
 
                 {isEditingContent ? (
                     this.renderArea('content', content)
