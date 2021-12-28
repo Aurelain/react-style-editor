@@ -88,13 +88,11 @@ They all expect a CSS string as parameter and are useful if you don't want to us
 
 -   Color swatches (similar to the browser)
 -   Dropdown suggestions for properties/values (similar to the browser)
--   Ability to copy/delete fragments of code
 -   Keyboard support for `TAB`, `:` and `UP`/`DOWN` increments of numeric values
 -   Theme support (similar to the browser)
 -   Toggle view mode: tree/original
 -   Undo/redo
 -   Better code quality through `propTypes`
--   Better comment rendering (some comments look better inline rather than block)
 -   Filters (similar to the browser)
 -   Error messages displayed in the warning-sign's tooltip
 
