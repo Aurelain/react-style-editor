@@ -265,8 +265,8 @@ class StyleEditor extends React.Component {
      *
      */
     onCopy = (event) => {
+        if (hasSelection()) return;
         const blob = prettify(this.currentRules);
-        // console.log(blob); // TODO
         event.nativeEvent.clipboardData.setData('text/plain', blob);
         event.preventDefault();
     };
