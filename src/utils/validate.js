@@ -117,9 +117,12 @@ const createPlayground = () => {
     iframe.style.display = 'none';
     document.head.appendChild(iframe);
     const iframeDocument = iframe.contentWindow.document;
-    // document.head.removeChild(iframe); // TODO: investigate why Chrome 8X breaks if we remove the iframe
     const style = iframeDocument.createElement('style');
     iframeDocument.head.appendChild(style);
+
+    // Important: Since Chrome 80 (or so), we need to remove the iframe AFTER we added the style.
+    document.head.removeChild(iframe);
+
     return style.sheet;
 };
 
