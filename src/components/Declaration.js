@@ -87,14 +87,16 @@ class Declaration extends React.PureComponent {
 
         return (
             <div className={cls(classes.root, !isValid && classes.isInvalid)} onClick={this.onDeclarationClick}>
-                <Checkbox id={id} tick={1} onTick={onTick} />
+                <Checkbox id={id} tick={1} onTick={onTick} tabIndex={0} />
 
                 {isEditingProperty ? (
                     this.renderArea('property', property)
                 ) : (
                     <span
+                        tabIndex={0}
                         className={cls(classes.property, !cleanProperty && classes.isEmpty)}
                         onClick={this.onPropertyClick}
+                        onFocus={this.onPropertyClick}
                     >
                         {cleanProperty}
                     </span>
@@ -106,8 +108,10 @@ class Declaration extends React.PureComponent {
                     this.renderArea('value', value)
                 ) : (
                     <span
+                        tabIndex={0}
                         className={cls(classes.value, !cleanValue && classes.isEmpty)}
                         onClick={this.onValueClick}
+                        onFocus={this.onValueClick}
                         title={shortTitle}
                     >
                         {shortValue}
@@ -120,7 +124,7 @@ class Declaration extends React.PureComponent {
 
                 {isEditingAfter && (
                     <div className={classes.after}>
-                        <Checkbox tick={1} />
+                        <Checkbox tick={1} tabIndex={0} />
                         {this.renderArea(AFTER, '')}
                     </div>
                 )}

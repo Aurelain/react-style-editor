@@ -35,6 +35,7 @@ class Area extends React.PureComponent {
         const {defaultValue} = this.props;
         return (
             <textarea
+                tabIndex={0}
                 className={classes.root}
                 defaultValue={defaultValue}
                 onClick={this.onClick}
